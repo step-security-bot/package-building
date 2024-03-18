@@ -1,0 +1,7 @@
+[goreleaser.goreleaser-pro]
+linux        = "Linux"
+arm64        = "arm64"
+intel64      = "x86_64"
+pattern      = 'goreleaser-pro_{{.OS}}_{{.Arch}}.{{.Ext}}'
+archive-path = "goreleaser"
+write-to-bin = "goreleaser"
