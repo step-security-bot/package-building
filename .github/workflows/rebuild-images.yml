@@ -29,7 +29,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Generate build matrix
+    name: Build
     permissions:
       packages: write
       contents: read
@@ -97,7 +97,7 @@ jobs:
             docker buildx build \
               --no-cache \
               --platform "linux/amd64,linux/arm64" \
-              --tag ghcr.io/northwood-labs/package-builder/${IMAGE}:latest \
+              --tag "ghcr.io/northwood-labs/package-builder/${IMAGE}:latest" \
               --file "${DFILE}" \
               --secret id=GITHUB_TOKEN,env=GITHUB_TOKEN \
               --output=type=registry \
