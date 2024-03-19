@@ -25,8 +25,8 @@ ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV PIP_ROOT_USER_ACTION ignore
 
 # Temporary. Remove as soon as we can.
-RUN echo "busybox==1.36.1-r2" >>/etc/apk/world
-RUN echo "busybox-binsh==1.36.1-r2" >>/etc/apk/world
+# RUN echo "busybox==1.36.1-r2" >>/etc/apk/world
+# RUN echo "busybox-binsh==1.36.1-r2" >>/etc/apk/world
 
 # Install Packages
 RUN apk upgrade --update --no-cache

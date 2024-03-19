@@ -32,6 +32,7 @@ RUN apt-get -y update && \
         dialog \
         git \
         gpg \
+        gpg-agent \
         nano \
         openssh-client \
         software-properties-common \
