@@ -93,6 +93,8 @@ jobs:
           export DFILE="$(echo "${{ matrix.dockerfile }}" | cut -d '/' -f 2)"
           export IMAGE="$(echo "${{ matrix.dockerfile }}" | sed "s|/Dockerfile.|-|g")"
 
+          cp -vf download-asset.toml "${DIR}/download-asset.toml"
+
           cd "${DIR}" && \
             docker buildx build \
               --no-cache \
