@@ -3,16 +3,9 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: Auto-update buildboxes
+name: Manually build ALL buildboxes
 on:
-  push:
-    branches: [main]
-    paths:
-      - "buildboxes/**"
-  pull_request:
-    branches: [main]
-    paths:
-      - "buildboxes/**"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,27 +28,18 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
-
-    # Steps represent a sequence of tasks that will be executed as part of the job.
-    steps:
-      - name: Get changed files
-        id: changed_files
-        run: |
-          ./diff.sh ${{ github.event.before }} ${{ github.event.after }}
-          echo "dockerfiles=$(jq -Mrc '.' .changed)" >> "$GITHUB_OUTPUT"
-
-  build:
-    needs: generate
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
-    strategy:
-      fail-fast: false
       matrix:
-        dockerfile: ${{ fromJson(needs.generate.outputs.dockerfiles) }}
+        dockerfile: [
+            "alpine/Dockerfile.v3.17", # Until 2024-11-22
+            "alpine/Dockerfile.v3.18", # Until 2025-05-09
+            "alpine/Dockerfile.v3.19", # Until 2025-11-01
 
-    name: Build ${{ matrix.dockerfile }}
+            # "amzn/Dockerfile.v2",    # Until 2025-06-30
+            # "amzn/Dockerfile.v2023", # Until 2028-03-15
+
+            "ubuntu/Dockerfile.v20.04", # Until 2025-04-02 (LTS)
+            "ubuntu/Dockerfile.v22.04", # Until 2027-04-01 (LTS)
+          ]
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
