@@ -71,6 +71,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the Docker image (multiarch)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euxo pipefail
           export DIR="buildboxes/$(echo "${{ matrix.dockerfile }}" | cut -d '/' -f 1)"
