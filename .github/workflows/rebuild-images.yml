@@ -103,6 +103,6 @@ jobs:
               --output=type=registry \
               --compress \
               --force-rm \
-              --build-arg BUILD_DATE=$$(date "+%Y-%m-%d") \
-              --build-arg "VCS_REF=$$(git log --pretty=format:'%h' -n 1 | tr -d '\n')" \
+              --build-arg BUILD_DATE=$(date "+%Y-%m-%d") \
+              --build-arg "VCS_REF=$(git log --pretty=format:'%h' -n 1 | tr -d '\n')" \
               .
