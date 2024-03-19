@@ -38,6 +38,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
+      - name: Git clone
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
       - name: Get changed files
         id: changed_files
         run: |
