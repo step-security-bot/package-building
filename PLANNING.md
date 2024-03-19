@@ -6,7 +6,6 @@ Only non-end-of-life OS releases are considered (e.g., CentOS Linux is dead). We
 
 | OS       | Release   | End-of-life date                                  |
 |----------|-----------|---------------------------------------------------|
-| [Alpine] | 3.16      | [2024-05-23](https://endoflife.date/alpine)       |
 | [Alpine] | 3.17      | [2024-11-22](https://endoflife.date/alpine)       |
 | [Alpine] | 3.18      | [2025-05-09](https://endoflife.date/alpine)       |
 | [Alpine] | 3.19      | [2025-11-01](https://endoflife.date/alpine)       |
