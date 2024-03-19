@@ -17,7 +17,6 @@ ENV OS_DIST_PKG deb
 # Environment variables
 ENV CGO_ENABLED 0
 ENV DEBIAN_FRONTEND noninteractive
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/go/bin
 ENV PIP_ROOT_USER_ACTION ignore
 
 RUN apt-get -y update && \
