@@ -23,6 +23,7 @@ ENV OS_DIST_PKG deb
 ENV CGO_ENABLED 0
 ENV DEBIAN_FRONTEND noninteractive
 ENV PIP_ROOT_USER_ACTION ignore
+ENV PATH "/root/go/bin:$PATH"
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
