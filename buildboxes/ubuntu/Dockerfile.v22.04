@@ -54,7 +54,6 @@ RUN apt-get -y update && \
         file \
         gettext \
         glibc-source \
-        glibc-tools \
         golang-go \
         gzip \
         jq \
