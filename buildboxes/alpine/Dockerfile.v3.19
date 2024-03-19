@@ -65,7 +65,6 @@ RUN --mount=type=secret,id=GITHUB_TOKEN GITHUB_TOKEN="$(cat /run/secrets/GITHUB_
 # Labels
 ARG BUILD_DATE
 ARG VCS_REF
-ARG VCS_URL
 
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 LABEL org.opencontainers.image.title="Package Builder: Alpine 3.19"
