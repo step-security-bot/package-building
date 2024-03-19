@@ -21,6 +21,7 @@ concurrency:
 # Variables available to all jobs defined in this file
 env:
   DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
 
 # Declare default permissions as read only.
 permissions: read-all
