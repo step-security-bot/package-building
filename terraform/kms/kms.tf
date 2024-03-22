@@ -13,12 +13,7 @@ resource "aws_kms_key" "s3_buckets" {
   # These are the policies which restrict who can access this key.
   policy = data.aws_iam_policy_document.key_policy.json
 
-  tags = {
-    app         = "package-builder"
-    env         = "prod"
-    deployed_at = timestamp()
-    deployed_by = data.aws_caller_identity.current.arn
-  }
+  tags = module.aws_resource_tags.common_tags
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias

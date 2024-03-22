@@ -4,12 +4,7 @@ resource "aws_s3_bucket" "package_builder" {
   force_destroy       = false
   object_lock_enabled = false
 
-  tags = {
-    app         = "package-builder"
-    env         = "prod"
-    deployed_at = timestamp()
-    deployed_by = data.aws_caller_identity.current.arn
-  }
+  tags = module.aws_resource_tags.common_tags
 }
 
 # BucketOwnerEnforced means that traditional ACLs are disabled and only bucket owner has access to the objects.

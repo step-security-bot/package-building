@@ -53,4 +53,5 @@ aws-vault exec prod-admin -- terragrunt apply tfplan
 aws-vault exec prod-admin -- terragrunt output -json s3_bucket_name | jq '.'
 aws-vault exec prod-admin -- terragrunt output -json iam_policy | jq 'fromjson'
 aws-vault exec prod-admin -- terragrunt output -json bucket | jq '.'
+aws-vault exec prod-admin -- terragrunt output -json s3_bucket_name_url | jq -Mr '.'
 ```

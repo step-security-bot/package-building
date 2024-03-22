@@ -19,7 +19,7 @@ data "aws_iam_policy_document" "key_policy" {
     condition {
       test     = "StringEquals"
       variable = "aws:PrincipalOrgID"
-      values   = [var.aws_org_id]
+      values   = [data.aws_ssm_parameter.org_id.value]
     }
 
     principals {
@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "key_policy" {
     condition {
       test     = "StringEquals"
       variable = "aws:PrincipalOrgID"
-      values   = [var.aws_org_id]
+      values   = [data.aws_ssm_parameter.org_id.value]
     }
 
     principals {
@@ -104,7 +104,7 @@ data "aws_iam_policy_document" "key_policy" {
     condition {
       test     = "StringEquals"
       variable = "aws:PrincipalOrgID"
-      values   = [var.aws_org_id]
+      values   = [data.aws_ssm_parameter.org_id.value]
     }
 
     principals {

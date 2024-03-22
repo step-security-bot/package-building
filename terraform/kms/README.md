@@ -4,9 +4,9 @@
 
 Create a customer-managed KMS key which can be used to encrypt S3 buckets. There are policies in this repo which grant read/decrypt access to this key from other resources.
 
-**This key should be deployed only to the Production account (`381491855445`).**
+**This key should be deployed only to the Production account. Everything else will read from there.**
 
-When logged into Production (`381491855445`), you can use [this link](https://us-east-2.console.aws.amazon.com/kms/home?region=us-east-2#/kms/keys/087bae47-a506-456b-a521-a0da0464e32f) to view the key.
+When logged into Production, you can use  to view the key.
 
 ## Notes
 
@@ -58,4 +58,5 @@ aws-vault exec prod-admin -- terragrunt apply tfplan
 ```bash
 aws-vault exec prod-admin -- terragrunt output -json kms_key | jq '.'
 aws-vault exec prod-admin -- terragrunt output -json kms_alias | jq '.'
+aws-vault exec prod-admin -- terragrunt output -json key_id_url | jq -Mr '.'
 ```
