@@ -59,6 +59,7 @@ jobs:
           echo "package_version=$(download-asset latest-tag -r tofuutils/tenv -s)" >> $GITHUB_ENV
 
       - name: Check to see if we've already built this version
+        id: check
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
@@ -68,15 +69,15 @@ jobs:
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
           echo "::add-mask::${AWSSSEKMSID}"
-          echo "::add-mask::${PACKAGE_BUCKET}"
 
           aws s3api head-object \
             --bucket "${PACKAGE_BUCKET}" \
             --key "rpm/amazonlinux/2/x86_64/tenv-${package_version}-1.x86_64.rpm" 2>&1 \
-            && echo "::error title=Package exists::We don't need to rebuild, so let's stop the build here." \
-            && exit 1
+            && echo "::notice title=Package exists::We don't need to rebuild, so let's stop the build here." \
+            && echo "already_built=true" >> $GITHUB_OUTPUT
 
       - name: Build the package
+        if: steps.check.outputs.already_built != 'true'
         working-directory: ./packages/tenv
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,6 +96,7 @@ jobs:
           goreleaser release --clean --nightly --skip=announce,publish,validate
 
       - name: Upload to S3
+        if: steps.check.outputs.already_built != 'true'
         working-directory: ./packages/tenv/dist
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
