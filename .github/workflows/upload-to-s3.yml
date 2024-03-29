@@ -43,10 +43,9 @@ jobs:
     steps:
       - uses: actions/cache/restore@v3
         id: cache
-        working-directory: ./packages/${{ inputs.package-name }}
         with:
           key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
-          path: dist
+          path: packages/${{ inputs.package-name }}/dist
 
       - working-directory: ./packages/${{ inputs.package-name }}/dist
         env:
