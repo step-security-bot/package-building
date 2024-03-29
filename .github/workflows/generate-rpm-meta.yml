@@ -55,12 +55,6 @@ jobs:
               -o use_sse=kmsid:${AWSSSEKMSID} \
               ;
 
-          # Can we parallelize this across runners?
-          cd /s3/rpm/amazonlinux/2/aarch64 && createrepo --verbose --update .
-          cd /s3/rpm/amazonlinux/2/x86_64 && createrepo --verbose --update .
-          cd /s3/rpm/amazonlinux/2023/aarch64 && createrepo --verbose --update .
-          cd /s3/rpm/amazonlinux/2023/x86_64 && createrepo --verbose --update .
-
   amzn2_aarch64:
     needs: generate
     runs-on: ubuntu-latest
