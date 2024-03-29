@@ -23,7 +23,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: RPM
+    name: Mount s3fs
     strategy:
       fail-fast: false
 
