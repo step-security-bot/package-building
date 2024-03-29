@@ -67,6 +67,9 @@ jobs:
           KMS_KEY_ID: "${{ secrets.KMS_KEY_ID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
+          echo "::add-mask::${KMS_KEY_ID}"
+          echo "::add-mask::${PACKAGE_BUCKET}"
+
           aws s3api head-object \
             --bucket "${PACKAGE_BUCKET}" \
             --key "rpm/amazonlinux/2/x86_64/tenv-${package_version}-1.x86_64.rpm" 2>&1 \
