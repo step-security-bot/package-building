@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: Generate RPM metadata
+name: "Step: Generate RPM metadata"
 on:
   workflow_call:
     # We will pass secrets to the reusable workflow.
@@ -59,4 +59,108 @@ jobs:
           cd /s3/rpm/amazonlinux/2/aarch64 && createrepo --verbose --update .
           cd /s3/rpm/amazonlinux/2/x86_64 && createrepo --verbose --update .
           cd /s3/rpm/amazonlinux/2023/aarch64 && createrepo --verbose --update .
+          cd /s3/rpm/amazonlinux/2023/x86_64 && createrepo --verbose --update .
+
+  amzn2_aarch64:
+    needs: generate
+    runs-on: ubuntu-latest
+    name: "RPM (amzn2, aarch64)"
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - name: "Update metadata"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
+          cd /s3/rpm/amazonlinux/2/aarch64 && createrepo --verbose --update .
+
+  amzn2_x86_64:
+    needs: generate
+    runs-on: ubuntu-latest
+    name: "RPM (amzn2, x86_64)"
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - name: "Update metadata"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
+          cd /s3/rpm/amazonlinux/2/x86_64 && createrepo --verbose --update .
+
+  amzn2023_aarch64:
+    needs: generate
+    runs-on: ubuntu-latest
+    name: "RPM (amzn2023, aarch64)"
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - name: "Update metadata"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
+          cd /s3/rpm/amazonlinux/2023/aarch64 && createrepo --verbose --update .
+
+  amzn2023_x86_64:
+    needs: generate
+    runs-on: ubuntu-latest
+    name: "RPM (amzn2023, x86_64)"
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - name: "Update metadata"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
           cd /s3/rpm/amazonlinux/2023/x86_64 && createrepo --verbose --update .
