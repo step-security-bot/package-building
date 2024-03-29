@@ -59,7 +59,8 @@ jobs:
         uses: actions/cache/restore@v4
         id: check
         with:
-          key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
+          key: "tenv-${{ steps.lookup_version.outputs.package_version }}"
+          path: packages/tenv/dist
           lookup-only: true
 
   build:
