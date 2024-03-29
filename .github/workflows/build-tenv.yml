@@ -1,0 +1,115 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: Auto-update buildboxes
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-tenv.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-tenv.yml"
+
+# First lookup the current version.
+# Then detect if we've already built it.
+# If we have, then we can skip the build.
+# Else, we need to build it.
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  # Lookup the current version of the package.
+  lookup:
+    runs-on: ubuntu-latest
+    name: Lookup current version
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Lookup latest version of package
+        run: |
+          echo "Lookup version"
+          echo "package_version=" >> $GITHUB_ENV
+
+      - name: Check to see if we've already built this version
+        run: |
+          echo "Check version"
+
+      - name: Build the package
+        working-directory: ./packages/tenv
+        run: |
+          # We just need to set a git tag. None of the rest of this matters.
+          git init
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
+          git add .
+          git commit -m "Test"
+          git remote add origin https://example.com
+          git tag "${package_version}"
+
+          # Build the package
+          goreleaser release --clean --nightly --skip=announce,publish,validate
+
+      - name: Upload to S3
+        working-directory: ./packages/tenv
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          KMS_KEY_ID: "${{ secrets.KMS_KEY_ID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
+          # rpm, x86_64
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${KMS_KEY_ID}" tenv*.x86_64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2/x86_64/"
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${KMS_KEY_ID}" tenv*.x86_64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/x86_64/"
+
+          # rpm, aarch64
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${KMS_KEY_ID}" tenv*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2/aarch64/"
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${KMS_KEY_ID}" tenv*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/aarch64/"
+
+  triggers:
+    name: Trigger workflow
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: "AL2: Update metadata"
+        env:
+          GHE_TOKEN: ${{ secrets.GHE_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${GHE_TOKEN}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/northwood-labs/package-building/actions/workflows/${{ matrix.workflows }}/dispatches" \
+            -d '{"ref":"main"}'

@@ -10,10 +10,15 @@ ignored:
   # Alpine
   - DL3017 # https://github.com/hadolint/hadolint/wiki/DL3017 (Do not use apk upgrade)
   - DL3018 # https://github.com/hadolint/hadolint/wiki/DL3018 (Pin versions in apk add)
-  - DL3047 # https://github.com/hadolint/hadolint/wiki/DL3047 (wget --progress)
 
+  # Amazon Linux
+  - DL3033 # https://github.com/hadolint/hadolint/wiki/DL3033 (Pin versions in yum install)
+
+  # Dockerfile
+  - DL3047 # https://github.com/hadolint/hadolint/wiki/DL3047 (wget --progress)
   - DL3059 # https://github.com/hadolint/hadolint/wiki/DL3059 (Multiple consecutive RUN instructions)
   - SC1091 # https://www.shellcheck.net/wiki/SC1091 (Shellcheck unable to follow dynamic paths)
 
 trustedRegistries:
   - docker.io # Official upstream
+  - ghcr.io

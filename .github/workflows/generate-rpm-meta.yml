@@ -1,0 +1,46 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: Generate RPM metadata
+on:
+  workflow_call:
+    # We will pass secrets to the reusable workflow.
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: RPM
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: "AL2: Update metadata"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          KMS_KEY_ID: "${{ secrets.KMS_KEY_ID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
+          # s3fs stuff

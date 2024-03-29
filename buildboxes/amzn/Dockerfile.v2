@@ -1,0 +1,76 @@
+# syntax=docker/dockerfile:1
+FROM --platform=$TARGETPLATFORM amazonlinux:2
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
+
+# Informational
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM."
+
+# Identify ourselves
+ENV OS_DIST amzn
+ENV OS_DIST_VER 2
+ENV OS_DIST_PKG rpm
+
+# Environment variables
+ENV CGO_ENABLED 0
+ENV PIP_ROOT_USER_ACTION ignore
+ENV PATH "/root/go/bin:$PATH"
+
+RUN yum -y update && \
+    yum -y upgrade && \
+    yum -y groupinstall "Development Tools" && \
+    yum -y install \
+        golang \
+        gzip \
+        jq \
+        nano \
+        ncurses-devel \
+        openssh-clients \
+        readline-devel \
+        util-linux \
+        wget \
+        which \
+    xz-devel \
+        yum-utils \
+    && \
+    yum clean all && \
+    rm -rf /var/cache/yum* \
+    ;
+
+RUN amazon-linux-extras install -y \
+        docker=stable \
+        python3.8=stable \
+        ;
+
+# We have to do some gymnastics to get the latest version of Go.
+RUN go install golang.org/dl/go1.22.0@latest && \
+    go1.22.0 download && \
+    go1.22.0 install github.com/northwood-labs/download-asset@latest && \
+    export GO_VER=$(download-asset latest-tag --owner-repo 'golang/go' --skip-to-tags --strip) && \
+    go install golang.org/dl/go${GO_VER}@latest && \
+    go${GO_VER} download && \
+    yum -y remove golang && \
+    ln -s $(which go${GO_VER}) /usr/bin/go
+
+COPY download-asset.toml /etc/download-asset/download-asset.toml
+RUN go install github.com/northwood-labs/download-asset@latest
+
+RUN --mount=type=secret,id=GITHUB_TOKEN GITHUB_TOKEN="$(cat /run/secrets/GITHUB_TOKEN)" \
+    download-asset get --owner-repo goreleaser/goreleaser-pro
+
+# Labels
+ARG BUILD_DATE
+ARG VCS_REF
+
+# https://github.com/opencontainers/image-spec/blob/master/annotations.md
+LABEL org.opencontainers.image.title="Package Builder: Amazon Linux 2"
+LABEL org.opencontainers.image.description="Container image to help facilitate building packages for Amazon Linux."
+LABEL org.opencontainers.image.url="https://github.com/northwood-labs/package-building"
+LABEL org.opencontainers.image.documentation="https://github.com/northwood-labs/package-building/wiki"
+LABEL org.opencontainers.image.vendor="Northwood Labs"
+LABEL org.opencontainers.image.authors="Ryan Parman <rparman@northwood-labs.com>"
+LABEL org.opencontainers.image.created="$BUILD_DATE"
+LABEL org.opencontainers.image.source="git@github.com:northwood-labs/package-building.git"
+LABEL org.opencontainers.image.revision="$VCS_REF"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
