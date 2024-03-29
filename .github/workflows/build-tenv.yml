@@ -99,9 +99,27 @@ jobs:
           # Build the package
           goreleaser release --clean --nightly --skip=announce,publish,validate
 
-  metadata:
+      - name: Cache the packages
+        id: cache-packages
+        working-directory: ./packages/tenv
+        uses: actions/cache/save@v4
+        with:
+          key: "tenv-${package_version}"
+          path: dist
+
+  upload:
     if: needs.lookup.outputs.already_built != 'true'
     needs: lookup
+    name: Upload to S3
+    uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
+    secrets: inherit
+    with:
+      package-name: tenv
+      package-version: "${package_version}"
+
+  metadata:
+    if: needs.lookup.outputs.already_built != 'true'
+    needs: upload
     name: Generate metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
     secrets: inherit

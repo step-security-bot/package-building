@@ -1,0 +1,67 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: "Step: Upload to S3"
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+      package-version:
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: Upload to S3
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - uses: actions/cache/restore@v3
+        id: cache
+        working-directory: ./packages/${{ inputs.package-name }}
+        with:
+          key: "${{ input.package-name }}-${{ input.package-version }}"
+          path: dist
+
+      - working-directory: ./packages/${{ inputs.package-name }}/dist
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
+          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+        run: |
+
+          # rpm, x86_64
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.x86_64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2/x86_64/"
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.x86_64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/x86_64/"
+
+          # rpm, aarch64
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2/aarch64/"
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/aarch64/"
