@@ -99,7 +99,7 @@ jobs:
           aws s3 cp --sse=aws:kms --sse-kms-key-id="${KMS_KEY_ID}" tenv*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/aarch64/"
 
   metadata:
-    needs: upload
+    needs: lookup
     name: Generate metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
     secrets: inherit
