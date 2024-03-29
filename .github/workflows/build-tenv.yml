@@ -54,6 +54,7 @@ jobs:
           ref: ${{ github.base_ref }}
 
       - name: Lookup latest version of package
+        id: lookup_version
         run: |
           echo "Lookup version"
           echo "package_version=$(
@@ -74,7 +75,7 @@ jobs:
           git add .
           git commit -m "Test"
           git remote add origin https://example.com
-          git tag "${package_version}"
+          git tag "${{ steps.lookup_version.outputs.package_version }}"
 
           # Build the package
           goreleaser release --clean --nightly --skip=announce,publish,validate
