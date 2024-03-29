@@ -19,9 +19,9 @@ on:
 # If we have, then we can skip the build.
 # Else, we need to build it.
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
 # Variables available to all jobs defined in this file
 env:
@@ -32,7 +32,6 @@ env:
 permissions: read-all
 
 jobs:
-  # Lookup the current version of the package.
   lookup:
     runs-on: ubuntu-latest
     name: Lookup current version
