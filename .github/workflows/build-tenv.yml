@@ -68,6 +68,8 @@ jobs:
 
       - name: Build the package
         working-directory: ./packages/tenv
+        env:
+          GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
         run: |
           # We just need to set a git tag. None of the rest of this matters.
           git init
