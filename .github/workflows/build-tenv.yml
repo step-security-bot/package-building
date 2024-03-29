@@ -48,18 +48,11 @@ jobs:
       package_version: ${{ steps.lookup_version.outputs.package_version }}
 
     steps:
-      - name: Git clone
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.base_ref }}
-
       - name: Lookup latest version of package
         id: lookup_version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Lookup version"
-          download-asset latest-tag -r tofuutils/tenv
           echo "package_version=$(download-asset latest-tag -r tofuutils/tenv -s)" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
