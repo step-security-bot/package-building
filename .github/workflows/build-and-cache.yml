@@ -41,6 +41,11 @@ jobs:
       options: --privileged
 
     steps:
+      - name: Git clone
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
       - name: Build the package
         working-directory: packages/${{ inputs.package-name }}
         env:
