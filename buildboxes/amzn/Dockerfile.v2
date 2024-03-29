@@ -17,6 +17,9 @@ ENV CGO_ENABLED 0
 ENV PIP_ROOT_USER_ACTION ignore
 ENV PATH "/root/go/bin:$PATH"
 
+# Helper
+ENV GO_VER 1.22.1
+
 RUN yum -y update && \
     yum -y upgrade && \
     yum -y groupinstall "Development Tools" && \
@@ -67,10 +70,10 @@ RUN ln -s "$(which python3.8)" /usr/bin/python3 && \
         ;
 
 RUN --mount=type=secret,id=GITHUB_TOKEN \
-    go install golang.org/dl/go1.22.1@latest && \
-    go1.22.1 download && \
+    go install golang.org/dl/go${GO_VER}@latest && \
+    go${GO_VER} download && \
     yum -y remove golang && \
-    ln -s $(which go${GO_VER}) /usr/bin/go
+    ln -s /root/go/bin/go${GO_VER} /usr/bin/go
 
 COPY download-asset.toml /etc/download-asset/download-asset.toml
 RUN go install github.com/northwood-labs/download-asset@latest
