@@ -3,28 +3,26 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: Build tenv
+{{ .DoNotEdit }}
+
+name: Build {{ .Package }}
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/build-tenv.yml"
+      - ".github/workflows/build-{{ .Package }}.yml"
   pull_request:
     branches: [main]
     paths:
-      - ".github/workflows/build-tenv.yml"
+      - ".github/workflows/build-{{ .Package }}.yml"
     schedule:
-      - cron: "20 14 * * *"
-
-# concurrency:
-#   group: ${{ github.workflow }}-${{ github.ref }}
-#   cancel-in-progress: true
+      - cron: '{{ .CronExpr }}'
 
 # Variables available to all jobs defined in this file
 env:
   DOCKER_BUILDKIT: 1
-  REGISTRY: ${{ vars.REGISTRY }}
+  REGISTRY: {{ "${{" }} vars.REGISTRY {{ "}}" }}
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -42,27 +40,27 @@ jobs:
     container:
       image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
       credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: {{ "${{" }} github.actor {{ "}}" }}
+        password: {{ "${{" }} secrets.GITHUB_TOKEN {{ "}}" }}
 
     outputs:
-      cache_hit: ${{ steps.check.outputs.cache-hit }}
-      package_version: ${{ steps.lookup_version.outputs.package_version }}
+      cache_hit: {{ "${{" }} steps.check.outputs.cache-hit {{ "}}" }}
+      package_version: {{ "${{" }} steps.lookup_version.outputs.package_version {{ "}}" }}
 
     steps:
       - name: Lookup latest version of package
         id: lookup_version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: {{ "${{" }} secrets.GITHUB_TOKEN {{ "}}" }}
         run: |
-          echo "package_version=$(download-asset latest-tag -r tofuutils/tenv -s)" >> $GITHUB_OUTPUT
+          echo "package_version=$(download-asset latest-tag -r {{ .OwnerRepo }} -s)" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
         uses: actions/cache/restore@v4
         id: check
         with:
-          key: "tenv-${{ steps.lookup_version.outputs.package_version }}"
-          path: packages/tenv/dist
+          key: "tenv-{{ "${{" }} steps.lookup_version.outputs.package_version {{ "}}" }}"
+          path: "packages/{{ .Package }}/dist"
           lookup-only: true
 
   build:
@@ -72,8 +70,8 @@ jobs:
     uses: northwood-labs/package-building/.github/workflows/build-and-cache.yml@main
     secrets: inherit
     with:
-      package-name: tenv
-      package-version: ${{ needs.lookup.outputs.package_version }}
+      package-name: "{{ .Package }}"
+      package-version: {{ "${{" }} needs.lookup.outputs.package_version {{ "}}" }}
 
   upload:
     if: needs.lookup.outputs.cache_hit != 'true'
@@ -82,8 +80,8 @@ jobs:
     uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
     secrets: inherit
     with:
-      package-name: tenv
-      package-version: ${{ needs.lookup.outputs.package_version }}
+      package-name: "{{ .Package }}"
+      package-version: {{ "${{" }} needs.lookup.outputs.package_version {{ "}}" }}
 
   metadata:
     if: needs.lookup.outputs.cache_hit != 'true'

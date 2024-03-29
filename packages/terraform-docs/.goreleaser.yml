@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: terraform-docs
+
+variables:
+  Vendor: terraform-docs authors
+  VendorHomepage: https://terraform-docs.io
+  License: MIT
+  Description: |
+    A utility to generate documentation from Terraform modules in various output formats.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
