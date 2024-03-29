@@ -1,0 +1,67 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: "Step: Build and cache"
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+      package-version:
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: Build and cache
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - name: Build the package
+        working-directory: ./packages/${{ inputs.package-name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+        run: |
+          # We just need to set a git tag. None of the rest of this matters.
+          git init
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
+          git add .
+          git commit -m "Test"
+          git remote add origin https://example.com
+          git tag "${{ inputs.package-version }}"
+
+          # Build the package
+          goreleaser release --clean --nightly --skip=announce,publish,validate
+
+      - name: Cache the packages
+        uses: actions/cache/save@v4
+        id: cache-packages
+        with:
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
+          path: packages/${{ inputs.package-name }}/dist

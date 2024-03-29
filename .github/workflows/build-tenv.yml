@@ -73,6 +73,7 @@ jobs:
         run: |
           echo "::add-mask::${AWSSSEKMSID}"
 
+          # We'll use amzn2-x86_64 as a proxy for all packages pushed to S3.
           aws s3api head-object \
             --bucket "${PACKAGE_BUCKET}" \
             --key "rpm/amazonlinux/2/x86_64/tenv-${package_version}-1.x86_64.rpm" 2>&1 \
@@ -80,35 +81,19 @@ jobs:
             && echo "already_built=true" >> $GITHUB_OUTPUT \
             || true
 
-      - name: Build the package
-        if: steps.check.outputs.already_built != 'true'
-        working-directory: ./packages/tenv
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
-        run: |
-          # We just need to set a git tag. None of the rest of this matters.
-          git init
-          git config user.email "you@example.com"
-          git config user.name "Your Name"
-          git add .
-          git commit -m "Test"
-          git remote add origin https://example.com
-          git tag "${package_version}"
-
-          # Build the package
-          goreleaser release --clean --nightly --skip=announce,publish,validate
-
-      - name: Cache the packages
-        uses: actions/cache/save@v4
-        id: cache-packages
-        with:
-          key: "tenv-${package_version}"
-          path: packages/tenv/dist
+  build:
+    if: needs.lookup.outputs.already_built != 'true'
+    needs: lookup
+    name: Build and cache
+    uses: northwood-labs/package-building/.github/workflows/build-and-cache.yml@main
+    secrets: inherit
+    with:
+      package-name: tenv
+      package-version: "${package_version}"
 
   upload:
     if: needs.lookup.outputs.already_built != 'true'
-    needs: lookup
+    needs: build
     name: Upload to S3
     uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
     secrets: inherit
