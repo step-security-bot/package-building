@@ -70,7 +70,7 @@ jobs:
           # We'll use amzn2-x86_64 as a proxy for all packages pushed to S3.
           aws s3api head-object \
             --bucket "${PACKAGE_BUCKET}" \
-            --key "rpm/amazonlinux/2/x86_64/tenv-${{ needs.lookup.outputs.package_version }}-1.x86_64.rpm" 2>&1 \
+            --key "rpm/amazonlinux/2/x86_64/tenv-${{ steps.lookup_version.outputs.package_version }}-1.x86_64.rpm" 2>&1 \
             && echo "::notice title=Package exists::We don't need to rebuild, so let's stop the build here." \
             && echo "already_built=true" >> $GITHUB_OUTPUT \
             || true
