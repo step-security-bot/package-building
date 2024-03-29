@@ -77,8 +77,7 @@ jobs:
             --bucket "${PACKAGE_BUCKET}" \
             --key "rpm/amazonlinux/2/x86_64/tenv-${package_version}-1.x86_64.rpm" 2>&1 \
             && echo "::notice title=Package exists::We don't need to rebuild, so let's stop the build here." \
-            && echo "already_built=true" >> $GITHUB_OUTPUT \
-            || true
+            && echo "already_built=true" >> $GITHUB_OUTPUT
 
       - name: Build the package
         if: steps.check.outputs.already_built != 'true'
@@ -99,18 +98,9 @@ jobs:
           # Build the package
           goreleaser release --clean --nightly --skip=announce,publish,validate
 
-  upload:
-    if: needs.lookup.outputs.already_built != 'true'
-    needs: lookup
-    name: Upload to S3
-    uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
-    secrets: inherit
-    with:
-      package-name: tenv
-
   metadata:
     if: needs.lookup.outputs.already_built != 'true'
-    needs: upload
+    needs: lookup
     name: Generate metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
     secrets: inherit
