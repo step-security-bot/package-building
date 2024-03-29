@@ -100,9 +100,9 @@ jobs:
           goreleaser release --clean --nightly --skip=announce,publish,validate
 
       - name: Cache the packages
+        uses: actions/cache/save@v4
         id: cache-packages
         working-directory: ./packages/tenv
-        uses: actions/cache/save@v4
         with:
           key: "tenv-${package_version}"
           path: dist
