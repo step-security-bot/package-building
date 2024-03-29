@@ -32,6 +32,7 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
 
     steps:
       - name: "AL2: Update metadata"
@@ -40,7 +41,22 @@ jobs:
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
           AWS_REGION: ${{ vars.AWS_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          KMS_KEY_ID: "${{ secrets.KMS_KEY_ID }}"
+          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
-          # s3fs stuff
+          echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > ${HOME}/.passwd-s3fs
+          chmod 600 ${HOME}/.passwd-s3fs
+
+          mkdir -p /s3
+          s3fs ${PACKAGE_BUCKET} /s3 \
+              -o passwd_file=${HOME}/.passwd-s3fs \
+              -o use_cache=/tmp \
+              -o endpoint=us-east-2 \
+              -o use_sse=kmsid:${AWSSSEKMSID} \
+              ;
+
+          # Can we parallelize this across runners?
+          cd /s3/rpm/amazonlinux/2/aarch64 && createrepo --verbose --update .
+          cd /s3/rpm/amazonlinux/2/x86_64 && createrepo --verbose --update .
+          cd /s3/rpm/amazonlinux/2023/aarch64 && createrepo --verbose --update .
+          cd /s3/rpm/amazonlinux/2023/x86_64 && createrepo --verbose --update .

@@ -21,6 +21,7 @@ RUN yum -y update && \
     yum -y upgrade && \
     yum -y groupinstall "Development Tools" && \
     yum -y install \
+        createrepo \
         golang \
         gzip \
         jq \
@@ -31,7 +32,7 @@ RUN yum -y update && \
         util-linux \
         wget \
         which \
-    xz-devel \
+        xz-devel \
         yum-utils \
     && \
     yum clean all && \
@@ -40,17 +41,34 @@ RUN yum -y update && \
 
 RUN amazon-linux-extras install -y \
         docker=stable \
+        epel=stable \
         python3.8=stable \
         ;
 
-# We have to do some gymnastics to get the latest version of Go.
+RUN yum -y update && \
+    yum -y install \
+        fuse \
+        fuse-devel \
+        fuse-libs \
+        fuse3 \
+        fuse3-devel \
+        fuse3-libs \
+        s3fs-fuse \
+    && \
+    yum clean all && \
+    rm -rf /var/cache/yum* \
+    ;
+
+RUN ln -s "$(which python3.8)" /usr/bin/python3 && \
+    $(which python3.8) -m pip install --upgrade pip && \
+    $(which python3.8) -m pip install --upgrade \
+        awscli \
+        certifi \
+        ;
+
 RUN --mount=type=secret,id=GITHUB_TOKEN \
-    go install golang.org/dl/go1.22.0@latest && \
-    go1.22.0 download && \
-    go1.22.0 install github.com/northwood-labs/download-asset@latest && \
-    export GO_VER=$(GITHUB_TOKEN="$(cat /run/secrets/GITHUB_TOKEN)" download-asset latest-tag --owner-repo 'golang/go' --skip-to-tags --strip) && \
-    go install golang.org/dl/go${GO_VER}@latest && \
-    go${GO_VER} download && \
+    go install golang.org/dl/go1.22.1@latest && \
+    go1.22.1 download && \
     yum -y remove golang && \
     ln -s $(which go${GO_VER}) /usr/bin/go
 

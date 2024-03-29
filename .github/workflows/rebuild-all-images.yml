@@ -22,7 +22,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Generate build matrix
+    name: Docker build
     permissions:
       packages: write
       contents: read

@@ -65,6 +65,12 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* \
     ;
 
+RUN $(which python3) -m pip install --upgrade pip && \
+    $(which python3) -m pip install --upgrade \
+        awscli \
+        certifi \
+        ;
+
 COPY download-asset.toml /etc/download-asset/download-asset.toml
 RUN go install github.com/northwood-labs/download-asset@latest
 

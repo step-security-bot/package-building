@@ -16,7 +16,7 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM."
 
 # Identify ourselves
 ENV OS_DIST ubuntu
-ENV OS_DIST_VER focal
+ENV OS_DIST_VER 20.04
 ENV OS_DIST_PKG deb
 
 # Environment variables
@@ -69,6 +69,12 @@ RUN apt-get -y update && \
     && \
     rm -rf /var/lib/apt/lists/* \
     ;
+
+RUN $(which python3) -m pip install --upgrade pip && \
+    $(which python3) -m pip install --upgrade \
+        awscli \
+        certifi \
+        ;
 
 COPY download-asset.toml /etc/download-asset/download-asset.toml
 RUN go install github.com/northwood-labs/download-asset@latest
