@@ -3,10 +3,13 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "Step: Generate RPM metadata"
+name: "Step: Upload to S3"
 on:
   workflow_call:
-    # We will pass secrets to the reusable workflow.
+    inputs:
+      package-name:
+        required: true
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,19 +26,20 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Mount s3fs
+    name: Upload to S3
     strategy:
       fail-fast: false
 
     container:
-      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
       options: --privileged
 
     steps:
-      - env:
+      - working-directory: ./packages/${{ inputs.package-name }}/dist
+        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
           AWS_REGION: ${{ vars.AWS_REGION }}
@@ -43,18 +47,10 @@ jobs:
           AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
-          echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > ${HOME}/.passwd-s3fs
-          chmod 600 ${HOME}/.passwd-s3fs
+          # rpm, x86_64
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.x86_64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2/x86_64/"
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.x86_64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/x86_64/"
 
-          mkdir -p /s3
-          s3fs ${PACKAGE_BUCKET} /s3 \
-              -o passwd_file=${HOME}/.passwd-s3fs \
-              -o use_cache=/tmp \
-              -o endpoint=us-east-2 \
-              -o use_sse=kmsid:${AWSSSEKMSID} \
-              ;
-
-            cd /s3/rpm/amazonlinux/2/aarch64 && createrepo --verbose --update .
-            cd /s3/rpm/amazonlinux/2/x86_64 && createrepo --verbose --update .
-            cd /s3/rpm/amazonlinux/2023/aarch64 && createrepo --verbose --update .
-            cd /s3/rpm/amazonlinux/2023/x86_64 && createrepo --verbose --update .
+          # rpm, aarch64
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2/aarch64/"
+          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/aarch64/"
