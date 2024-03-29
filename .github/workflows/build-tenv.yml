@@ -5,6 +5,7 @@
 
 name: Build tenv
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -13,11 +14,6 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-tenv.yml"
-
-# First lookup the current version.
-# Then detect if we've already built it.
-# If we have, then we can skip the build.
-# Else, we need to build it.
 
 # concurrency:
 #   group: ${{ github.workflow }}-${{ github.ref }}
@@ -103,7 +99,7 @@ jobs:
           aws s3 cp --sse=aws:kms --sse-kms-key-id="${KMS_KEY_ID}" tenv*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/aarch64/"
 
   metadata:
-    needs: lookup
+    needs: upload
     name: Generate metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
     secrets: inherit
