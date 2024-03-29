@@ -102,10 +102,9 @@ jobs:
       - name: Cache the packages
         uses: actions/cache/save@v4
         id: cache-packages
-        working-directory: ./packages/tenv
         with:
           key: "tenv-${package_version}"
-          path: dist
+          path: packages/tenv/dist
 
   upload:
     if: needs.lookup.outputs.already_built != 'true'
