@@ -60,7 +60,10 @@ jobs:
 
       - name: Check to see if we've already built this version
         run: |
-          echo "TODO: Check version"
+          aws s3api head-object \
+            --bucket nwlabs-381491855445-package-builder \
+            --key "rpm/amazonlinux/2/x86_64/tenv-${package_version}-1.x86_64.rpm" 2>&1 \
+            || exit 1
 
       - name: Build the package
         working-directory: ./packages/tenv
