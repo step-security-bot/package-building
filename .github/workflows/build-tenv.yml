@@ -76,7 +76,7 @@ jobs:
           git add .
           git commit -m "Test"
           git remote add origin https://example.com
-          git tag "${{ steps.lookup_version.outputs.package_version }}"
+          git tag "${package_version}"
 
           # Build the package
           goreleaser release --clean --nightly --skip=announce,publish,validate
