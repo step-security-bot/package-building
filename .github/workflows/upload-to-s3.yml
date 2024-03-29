@@ -45,7 +45,7 @@ jobs:
         id: cache
         working-directory: ./packages/${{ inputs.package-name }}
         with:
-          key: "${{ input.package-name }}-${{ input.package-version }}"
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
           path: dist
 
       - working-directory: ./packages/${{ inputs.package-name }}/dist
