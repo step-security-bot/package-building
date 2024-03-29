@@ -44,7 +44,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     outputs:
-      already_built: ${{ steps.check.outputs.already_built }}
+      cache_hit: ${{ steps.check.outputs.cache-hit }}
       package_version: ${{ steps.lookup_version.outputs.package_version }}
 
     steps:
@@ -56,27 +56,14 @@ jobs:
           echo "package_version=$(download-asset latest-tag -r tofuutils/tenv -s)" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
+        uses: actions/cache/restore@v4
         id: check
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
-          AWS_REGION: ${{ vars.AWS_REGION }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
-          PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
-        run: |
-          echo "::add-mask::${AWSSSEKMSID}"
-
-          # We'll use amzn2-x86_64 as a proxy for all packages pushed to S3.
-          aws s3api head-object \
-            --bucket "${PACKAGE_BUCKET}" \
-            --key "rpm/amazonlinux/2/x86_64/tenv-${{ steps.lookup_version.outputs.package_version }}-1.x86_64.rpm" 2>&1 \
-            && echo "::notice title=Package exists::We don't need to rebuild, so let's stop the build here." \
-            && echo "already_built=true" >> $GITHUB_OUTPUT \
-            || true
+        with:
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
+          lookup-only: true
 
   build:
-    if: needs.lookup.outputs.already_built != 'true'
+    if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
     name: Build and cache
     uses: northwood-labs/package-building/.github/workflows/build-and-cache.yml@main
@@ -86,7 +73,7 @@ jobs:
       package-version: ${{ needs.lookup.outputs.package_version }}
 
   upload:
-    if: needs.lookup.outputs.already_built != 'true'
+    if: needs.lookup.outputs.cache_hit != 'true'
     needs: build
     name: Upload to S3
     uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
@@ -96,7 +83,7 @@ jobs:
       package-version: ${{ needs.lookup.outputs.package_version }}
 
   metadata:
-    if: needs.lookup.outputs.already_built != 'true'
+    if: needs.lookup.outputs.cache_hit != 'true'
     needs: upload
     name: Generate metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
