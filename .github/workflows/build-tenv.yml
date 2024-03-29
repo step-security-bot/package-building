@@ -43,6 +43,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    outputs:
+      already_built: ${{ steps.check.outputs.already_built }}
+
     steps:
       - name: Git clone
         uses: actions/checkout@v4
@@ -115,6 +118,7 @@ jobs:
           aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" tenv*.aarch64.rpm "s3://${PACKAGE_BUCKET}/rpm/amazonlinux/2023/aarch64/"
 
   metadata:
+    if: needs.lookup.outputs.already_built != 'true'
     needs: lookup
     name: Generate metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
