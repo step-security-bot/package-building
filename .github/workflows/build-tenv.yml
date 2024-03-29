@@ -55,6 +55,8 @@ jobs:
 
       - name: Lookup latest version of package
         id: lookup_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Lookup version"
           echo "package_version=$(
