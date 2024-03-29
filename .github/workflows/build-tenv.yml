@@ -45,6 +45,7 @@ jobs:
 
     outputs:
       already_built: ${{ steps.check.outputs.already_built }}
+      package_version: ${{ steps.lookup_version.outputs.package_version }}
 
     steps:
       - name: Git clone
@@ -59,7 +60,7 @@ jobs:
         run: |
           echo "Lookup version"
           download-asset latest-tag -r tofuutils/tenv
-          echo "package_version=$(download-asset latest-tag -r tofuutils/tenv -s)" >> $GITHUB_ENV
+          echo "package_version=$(download-asset latest-tag -r tofuutils/tenv -s)" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
         id: check
@@ -89,7 +90,7 @@ jobs:
     secrets: inherit
     with:
       package-name: tenv
-      package-version: "${package_version}"
+      package-version: ${{ needs.lookup.outputs.package_version }}
 
   upload:
     if: needs.lookup.outputs.already_built != 'true'
@@ -99,7 +100,7 @@ jobs:
     secrets: inherit
     with:
       package-name: tenv
-      package-version: "${package_version}"
+      package-version: ${{ needs.lookup.outputs.package_version }}
 
   metadata:
     if: needs.lookup.outputs.already_built != 'true'
