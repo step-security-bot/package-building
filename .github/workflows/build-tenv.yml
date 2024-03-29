@@ -104,6 +104,8 @@ jobs:
     name: Upload to S3
     uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
     secrets: inherit
+    with:
+      package-name: tenv
 
   metadata:
     if: needs.lookup.outputs.already_built != 'true'
