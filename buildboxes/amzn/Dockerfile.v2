@@ -44,10 +44,11 @@ RUN amazon-linux-extras install -y \
         ;
 
 # We have to do some gymnastics to get the latest version of Go.
-RUN go install golang.org/dl/go1.22.0@latest && \
+RUN --mount=type=secret,id=GITHUB_TOKEN \
+    go install golang.org/dl/go1.22.0@latest && \
     go1.22.0 download && \
     go1.22.0 install github.com/northwood-labs/download-asset@latest && \
-    export GO_VER=$(download-asset latest-tag --owner-repo 'golang/go' --skip-to-tags --strip) && \
+    export GO_VER=$(GITHUB_TOKEN="$(cat /run/secrets/GITHUB_TOKEN)" download-asset latest-tag --owner-repo 'golang/go' --skip-to-tags --strip) && \
     go install golang.org/dl/go${GO_VER}@latest && \
     go${GO_VER} download && \
     yum -y remove golang && \
