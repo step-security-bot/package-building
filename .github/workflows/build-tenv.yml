@@ -77,7 +77,8 @@ jobs:
             --bucket "${PACKAGE_BUCKET}" \
             --key "rpm/amazonlinux/2/x86_64/tenv-${package_version}-1.x86_64.rpm" 2>&1 \
             && echo "::notice title=Package exists::We don't need to rebuild, so let's stop the build here." \
-            && echo "already_built=true" >> $GITHUB_OUTPUT
+            && echo "already_built=true" >> $GITHUB_OUTPUT \
+            || true
 
       - name: Build the package
         if: steps.check.outputs.already_built != 'true'
