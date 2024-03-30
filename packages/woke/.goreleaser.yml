@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: woke
+
+variables:
+  Vendor: woke authors
+  VendorHomepage: https://docs.getwoke.tech
+  License: MIT
+  Description: |
+    Detect non-inclusive language in your source code.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
