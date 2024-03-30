@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "Step: Generate RPM metadata"
+name: "Step: Generate DEB metadata"
 on:
   workflow_call:
     # We will pass secrets to the reusable workflow.
@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
 
     container:
-      image: ghcr.io/northwood-labs/package-builder/amzn-v2:latest
+      image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -55,9 +55,4 @@ jobs:
               -o use_sse=kmsid:${AWSSSEKMSID} \
               ;
 
-            declare AMZN=("2" "2023")
-            for AL in ${AMZN[@]}; do
-              for CPU in ${ARCH[@]}; do
-                cd "/s3/rpm/amazonlinux/${AL}/${CPU}" && createrepo --verbose --update .
-              done
-            done
+          # Do stuff for deb
