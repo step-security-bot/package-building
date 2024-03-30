@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: osv-scanner
+
+variables:
+  Vendor: osv-scanner authors
+  VendorHomepage: https://google.github.io/osv-scanner
+  License: Apache-2.0
+  Description: |
+    Vulnerability scanner written in Go which uses the data provided by https://osv.dev.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
