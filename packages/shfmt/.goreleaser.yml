@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: shfmt
+
+variables:
+  Vendor: shfmt authors
+  VendorHomepage: https://github.com/mvdan/sh
+  License: BSD-3-Clause
+  Description: |
+    A shell parser, formatter, and interpreter with Bash support.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
