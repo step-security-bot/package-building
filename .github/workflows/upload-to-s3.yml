@@ -58,9 +58,7 @@ jobs:
           AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
-          # deb
-          echo "aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.deb s3://${PACKAGE_BUCKET}/apt/pool/main/"
-          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+          # aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
 
           declare ARCH=("x86_64" "aarch64")
 
@@ -68,7 +66,6 @@ jobs:
           declare AMZN=("2" "2023")
           for AL in ${AMZN[@]}; do
             for CPU in ${ARCH[@]}; do
-              echo "aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/"
               aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/
             done
           done
@@ -77,7 +74,6 @@ jobs:
           declare ALPINE=("3.17" "3.18" "3.19")
           for ALP in ${ALPINE[@]}; do
             for CPU in ${ARCH[@]}; do
-              echo "aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/"
               aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/
             done
           done
