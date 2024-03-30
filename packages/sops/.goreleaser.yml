@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: sops
+
+variables:
+  Vendor: Mozilla
+  VendorHomepage: https://getsops.io
+  License: MPL-2.0
+  Description: |
+    Simple and flexible tool for managing secrets.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
