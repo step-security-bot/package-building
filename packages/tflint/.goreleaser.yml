@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: tflint
+
+variables:
+  Vendor: tflint authors
+  VendorHomepage: https://github.com/terraform-linters/tflint
+  License: MPL-2.0
+  Description: |
+    A pluggable Terraform linter.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
