@@ -8,6 +8,10 @@ on:
   workflow_call:
     # We will pass secrets to the reusable workflow.
 
+defaults:
+  run:
+    shell: bash
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

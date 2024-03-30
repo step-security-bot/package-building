@@ -19,12 +19,14 @@ on:
     schedule:
       - cron: '{{ .CronExpr }}'
 
-# Variables available to all jobs defined in this file
+defaults:
+  run:
+    shell: bash
+
 env:
   DOCKER_BUILDKIT: 1
   REGISTRY: {{ "${{" }} vars.REGISTRY {{ "}}" }}
 
-# Declare default permissions as read only.
 permissions: read-all
 
 jobs:

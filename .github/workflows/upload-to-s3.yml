@@ -14,6 +14,10 @@ on:
         required: true
         type: string
 
+defaults:
+  run:
+    shell: bash
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -61,7 +65,7 @@ jobs:
           aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_arm64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
           aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_amd64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
 
-          ARCH=("x86_64" "aarch64")
+           ARCH=("x86_64" "aarch64")
 
           # rpm
           AMZN=("2" "2023")
