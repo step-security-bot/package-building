@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: tfschema
+
+variables:
+  Vendor: tfschema authors
+  VendorHomepage: https://github.com/minamijoyo/tfschema
+  License: MIT
+  Description: |
+    A schema inspector for Terraform/OpenTofu providers.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
