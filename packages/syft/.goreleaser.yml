@@ -1,0 +1,24 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: syft
+
+variables:
+  Vendor: Anchore
+  VendorHomepage: https://github.com/anchore/syft
+  License: Apache-2.0
+  Description: |
+    Tool for generating a Software Bill of Materials from container images
+    and filesystems.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
