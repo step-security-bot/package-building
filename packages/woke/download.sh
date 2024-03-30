@@ -5,7 +5,7 @@ set -euo pipefail
 download-asset get \
     --owner-repo "get-woke/woke" \
     --pattern "woke-{{.Ver}}-linux-amd64.{{.Ext}}" \
-    --archive-path "woke" \
+    --archive-path "woke-{{.Ver}}-linux-amd64/woke" \
     --write-to-bin "woke_amd64" \
     ;
 
@@ -13,6 +13,6 @@ download-asset get \
 download-asset get \
     --owner-repo "get-woke/woke" \
     --pattern "woke-{{.Ver}}-linux-arm64.{{.Ext}}" \
-    --archive-path "woke" \
+    --archive-path "woke-{{.Ver}}-linux-arm64/woke" \
     --write-to-bin "woke_arm64" \
     ;
