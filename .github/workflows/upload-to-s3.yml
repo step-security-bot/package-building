@@ -60,20 +60,20 @@ jobs:
         run: |
           # aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
 
-          declare ARCH=("x86_64" "aarch64")
+          ARCH=("x86_64" "aarch64")
 
           # rpm
-          declare AMZN=("2" "2023")
-          for AL in ${AMZN[@]}; do
-            for CPU in ${ARCH[@]}; do
+          AMZN=("2" "2023")
+          for AL in "${AMZN[@]}"; do
+            for CPU in "${ARCH[@]}"; do
               aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/
             done
           done
 
           # apk
-          declare ALPINE=("3.17" "3.18" "3.19")
-          for ALP in ${ALPINE[@]}; do
-            for CPU in ${ARCH[@]}; do
+          ALPINE=("3.17" "3.18" "3.19")
+          for ALP in "${ALPINE[@]}"; do
+            for CPU in "${ARCH[@]}"; do
               aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/
             done
           done
