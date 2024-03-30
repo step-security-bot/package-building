@@ -53,7 +53,7 @@ jobs:
         env:
           GITHUB_TOKEN: {{ "${{" }} secrets.GITHUB_TOKEN {{ "}}" }}
         run: |
-          echo "package_version=$(download-asset latest-tag -r {{ .OwnerRepo }} -s)" >> $GITHUB_OUTPUT
+          echo "package_version=$(download-asset latest-tag -r '{{ .OwnerRepo }}' -s)" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
         uses: actions/cache/restore@v4
