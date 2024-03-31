@@ -60,6 +60,8 @@ jobs:
               ;
 
           AMZN=("2" "2023")
+          ARCH=("x86_64" "aarch64")
+
           for AL in ${AMZN[@]}; do
             for CPU in ${ARCH[@]}; do
               cd "/s3/rpm/amazonlinux/${AL}/${CPU}" && createrepo --verbose --update .
