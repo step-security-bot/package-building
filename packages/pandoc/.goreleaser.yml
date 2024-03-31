@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: pandoc
+
+variables:
+  Vendor: pandoc authors
+  VendorHomepage: https://pandoc.org
+  License: GPL-2.0
+  Description: |
+    Universal markup converter.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
