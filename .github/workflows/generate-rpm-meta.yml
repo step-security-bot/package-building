@@ -59,9 +59,9 @@ jobs:
               -o use_sse=kmsid:${AWSSSEKMSID} \
               ;
 
-            declare AMZN=("2" "2023")
-            for AL in ${AMZN[@]}; do
-              for CPU in ${ARCH[@]}; do
-                cd "/s3/rpm/amazonlinux/${AL}/${CPU}" && createrepo --verbose --update .
-              done
+          AMZN=("2" "2023")
+          for AL in ${AMZN[@]}; do
+            for CPU in ${ARCH[@]}; do
+              cd "/s3/rpm/amazonlinux/${AL}/${CPU}" && createrepo --verbose --update .
             done
+          done
