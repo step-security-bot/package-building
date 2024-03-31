@@ -1,0 +1,24 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: licensei
+
+variables:
+  Vendor: licensei authors
+  VendorHomepage: https://github.com/goph/licensei
+  License: MIT
+  Description: |-
+    Library and various tools for working with project licenses. Works best with
+    Go projects.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
