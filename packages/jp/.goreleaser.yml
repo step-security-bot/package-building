@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: jp
+
+variables:
+  Vendor: jp authors
+  VendorHomepage: https://jmespath.site
+  License: MIT
+  Description: |
+    CLI for JMESPath Community edition.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
