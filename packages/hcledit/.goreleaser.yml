@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: hcledit
+
+variables:
+  Vendor: hcledit authors
+  VendorHomepage: https://github.com/minamijoyo/hcledit
+  License: MIT
+  Description: |
+    A command line editor for HCL.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
