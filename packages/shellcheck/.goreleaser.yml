@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: shellcheck
+
+variables:
+  Vendor: shellcheck authors
+  VendorHomepage: https://www.shellcheck.net
+  License: GPL-3.0
+  Description: |
+    ShellCheck, a static analysis tool for shell scripts.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
