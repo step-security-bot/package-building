@@ -5,7 +5,7 @@ set -euo pipefail
 download-asset get \
     --owner-repo "infracost/infracost" \
     --pattern "infracost-linux-amd64.{{.Ext}}" \
-    --archive-path "infracost" \
+    --archive-path "infracost-linux-amd64" \
     --write-to-bin "infracost_amd64" \
     ;
 
@@ -13,6 +13,6 @@ download-asset get \
 download-asset get \
     --owner-repo "infracost/infracost" \
     --pattern "infracost-linux-arm64.{{.Ext}}" \
-    --archive-path "infracost" \
+    --archive-path "infracost-linux-arm64" \
     --write-to-bin "infracost_arm64" \
     ;
