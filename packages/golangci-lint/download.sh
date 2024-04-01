@@ -13,6 +13,6 @@ download-asset get \
 download-asset get \
     --owner-repo "golangci/golangci-lint" \
     --pattern "golangci-lint-{{.Ver}}-linux-arm64.{{.Ext}}" \
-    --archive-path "golangci-lint-{{.Ver}}-linux-amd64/golangci-lint" \
+    --archive-path "golangci-lint-{{.Ver}}-linux-arm64/golangci-lint" \
     --write-to-bin "golangci-lint_arm64" \
     ;
