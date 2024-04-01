@@ -5,7 +5,7 @@ set -euo pipefail
 download-asset get \
     --owner-repo "segmentio/golines" \
     --pattern "golines_{{.Ver}}_linux_amd64.{{.Ext}}" \
-    --archive-path "golines" \
+    --archive-path "golines_{{.Ver}}_linux_amd64/golines" \
     --write-to-bin "golines_amd64" \
     ;
 
@@ -13,6 +13,6 @@ download-asset get \
 download-asset get \
     --owner-repo "segmentio/golines" \
     --pattern "golines_{{.Ver}}_linux_arm64.{{.Ext}}" \
-    --archive-path "golines" \
+    --archive-path "golines_{{.Ver}}_linux_arm64/golines" \
     --write-to-bin "golines_arm64" \
     ;
