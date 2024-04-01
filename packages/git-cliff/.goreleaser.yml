@@ -1,0 +1,63 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: git-cliff
+
+variables:
+  Vendor: git-cliff authors
+  VendorHomepage: https://git-cliff.org
+  License: Apache-2.0, MIT
+  Description: |-
+    A highly customizable Changelog Generator that follows Conventional Commit
+    specifications.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
+
+# https://goreleaser.com/customization/builds/#import-pre-built-binaries
+builds:
+  - id: prebuilt
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}_{{ .Arch }}"
+    binary: "{{ .ProjectName }}"
+
+  - id: prebuilt-musl
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}_musl_{{ .Arch }}"
+    binary: "{{ .ProjectName }}"
+
+# https://goreleaser.com/customization/nfpm/
+nfpms:
+  - id: package
+    builds:
+      - prebuilt
+    formats:
+      - deb
+      - rpm
+
+  - id: package-musl
+    builds:
+      - prebuilt-musl
+    formats:
+      - apk
