@@ -62,7 +62,7 @@ jobs:
           git tag "${{ inputs.package-version }}"
 
           # Build the package
-          goreleaser release --clean --nightly --skip=announce,publish,validate
+          goreleaser release --clean --nightly --skip=announce,publish,validate --verbose
 
       - name: Cache the packages
         uses: actions/cache/save@v4
