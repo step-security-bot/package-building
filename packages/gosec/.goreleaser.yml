@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: gosec
+
+variables:
+  Vendor: gosec authors
+  VendorHomepage: https://securego.io
+  License: Apache-2.0
+  Description: |-
+    Go security checker.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
