@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: goreleaser
+
+variables:
+  Vendor: goreleaser authors
+  VendorHomepage: https://goreleaser.com
+  License: MIT
+  Description: |-
+    Deliver Go binaries as fast and easily as possible.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
