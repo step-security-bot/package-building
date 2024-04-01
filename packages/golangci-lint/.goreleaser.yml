@@ -1,0 +1,25 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: golangci-lint
+
+variables:
+  Vendor: golangci-lint authors
+  VendorHomepage: https://golangci-lint.run
+  License: GPL-3.0
+  Description: |-
+    A fast Go linters runner. It runs linters in parallel, uses caching,
+    supports YAML configuration, integrates with all major IDEs, and includes
+    over a hundred linters.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
