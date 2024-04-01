@@ -1,0 +1,23 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: golines
+
+variables:
+  Vendor: golines authors
+  VendorHomepage: https://github.com/segmentio/golines
+  License: MIT
+  Description: |-
+    A Golang formatter that fixes long lines.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
