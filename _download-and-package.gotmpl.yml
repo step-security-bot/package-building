@@ -16,8 +16,8 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-{{ .Package }}.yml"
-    schedule:
-      - cron: '{{ .CronExpr }}'
+  schedule:
+    - cron: '{{ .CronExpr }}'
 
 defaults:
   run:
@@ -61,7 +61,7 @@ jobs:
         uses: actions/cache/restore@v4
         id: check
         with:
-          key: "tenv-{{ "${{" }} steps.lookup_version.outputs.package_version {{ "}}" }}"
+          key: "{{ .Package }}-{{ "${{" }} steps.lookup_version.outputs.package_version {{ "}}" }}"
           path: "packages/{{ .Package }}/dist"
           lookup-only: true
 
