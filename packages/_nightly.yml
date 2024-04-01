@@ -3,3 +3,7 @@
 nightly:
   name_template: "{{ .Tag }}"
   publish_release: false
+
+# https://goreleaser.com/customization/archive/#disable-archiving
+archives:
+  - format: binary
