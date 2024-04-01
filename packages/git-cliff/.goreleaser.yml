@@ -13,7 +13,11 @@ variables:
 # https://goreleaser.com/customization/includes/
 includes:
   - from_file:
-      path: ../shared.yml
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_nightly.yml
 
 # https://goreleaser.com/customization/hooks/
 before:
@@ -25,7 +29,7 @@ before:
 
 # https://goreleaser.com/customization/builds/#import-pre-built-binaries
 builds:
-  - id: prebuilt
+  - id: prebuilt-glibc
     builder: prebuilt
     goos:
       - linux
@@ -49,9 +53,9 @@ builds:
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
-  - id: package
+  - id: package-glibc
     builds:
-      - prebuilt
+      - prebuilt-glibc
     formats:
       - deb
       - rpm

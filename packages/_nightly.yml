@@ -1,0 +1,5 @@
+---
+# https://goreleaser.com/customization/nightlies/
+nightly:
+  name_template: "{{ .Tag }}"
+  publish_release: false

@@ -7,12 +7,20 @@ variables:
   VendorHomepage: https://infracost.io
   License: Apache-2.0
   Description: |
-    Cloud cost estimates for Terraform in pull requests💰📉 Shift FinOps Left!
+    Cloud cost estimates for Terraform in pull requests. Shift FinOps Left!
 
 # https://goreleaser.com/customization/includes/
 includes:
   - from_file:
-      path: ../shared.yml
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
 
 # https://goreleaser.com/customization/hooks/
 before:

@@ -1,0 +1,6 @@
+---
+# https://goreleaser.com/customization/env/
+env:
+  - OS_DIST={{ .Env.OS_DIST }}
+  - OS_DIST_VER={{ .Env.OS_DIST_VER }}
+  - OS_DIST_PKG={{ .Env.OS_DIST_PKG }}
