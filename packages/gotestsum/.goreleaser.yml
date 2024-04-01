@@ -1,0 +1,24 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: gotestsum
+
+variables:
+  Vendor: gotestsum authors
+  VendorHomepage: https://github.com/gotestyourself/gotestsum
+  License: Apache-2.0
+  Description: |-
+    'go test' runner with output optimized for humans, JUnit XML for CI
+    integration, and a summary of the test results.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../shared.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
