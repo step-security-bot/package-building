@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-gocovsh.yml"
+      - "packages/gocovsh/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-gocovsh.yml"
+      - "packages/gocovsh/**"
   schedule:
     - cron: '40 6 * * *'
 

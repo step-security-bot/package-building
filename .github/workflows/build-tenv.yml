@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-tenv.yml"
+      - "packages/tenv/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-tenv.yml"
+      - "packages/tenv/**"
   schedule:
     - cron: '20 14 * * *'
 

@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-licensei.yml"
+      - "packages/licensei/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-licensei.yml"
+      - "packages/licensei/**"
   schedule:
     - cron: '00 11 * * *'
 

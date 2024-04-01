@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-syft.yml"
+      - "packages/syft/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-syft.yml"
+      - "packages/syft/**"
   schedule:
     - cron: '00 14 * * *'
 

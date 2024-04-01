@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-jp.yml"
+      - "packages/jp/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-jp.yml"
+      - "packages/jp/**"
   schedule:
     - cron: '30 10 * * *'
 

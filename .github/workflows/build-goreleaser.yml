@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-goreleaser.yml"
+      - "packages/goreleaser/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-goreleaser.yml"
+      - "packages/goreleaser/**"
   schedule:
     - cron: '10 8 * * *'
 

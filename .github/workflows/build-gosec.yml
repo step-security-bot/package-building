@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-gosec.yml"
+      - "packages/gosec/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-gosec.yml"
+      - "packages/gosec/**"
   schedule:
     - cron: '20 8 * * *'
 

@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-terraform-docs.yml"
+      - "packages/terraform-docs/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-terraform-docs.yml"
+      - "packages/terraform-docs/**"
   schedule:
     - cron: '30 14 * * *'
 

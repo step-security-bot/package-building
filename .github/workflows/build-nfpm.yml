@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-nfpm.yml"
+      - "packages/nfpm/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-nfpm.yml"
+      - "packages/nfpm/**"
   schedule:
     - cron: '40 11 * * *'
 

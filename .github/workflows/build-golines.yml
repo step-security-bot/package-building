@@ -17,10 +17,12 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/build-golines.yml"
+      - "packages/golines/**"
   pull_request:
     branches: [main]
     paths:
       - ".github/workflows/build-golines.yml"
+      - "packages/golines/**"
   schedule:
     - cron: '10 7 * * *'
 
