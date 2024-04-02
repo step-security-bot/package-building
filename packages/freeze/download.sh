@@ -5,7 +5,7 @@ set -euo pipefail
 download-asset get \
     --owner-repo "charmbracelet/freeze" \
     --pattern "freeze_{{.Ver}}_Linux_x86_64.{{.Ext}}" \
-    --archive-path "freeze_{{.Ver}}_Linux_amd64/freeze" \
+    --archive-path "freeze_{{.Ver}}_Linux_x86_64/freeze" \
     --write-to-bin "freeze_amd64" \
     ;
 
