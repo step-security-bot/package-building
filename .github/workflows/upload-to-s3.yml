@@ -62,8 +62,12 @@ jobs:
           AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
-          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_arm64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
-          aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_amd64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+          if [[ -f ${{ inputs.package-name }}_*_arm64.deb ]]; then
+            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_arm64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+          fi
+          if [[ -f ${{ inputs.package-name }}_*_amd64.deb ]]; then
+            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_amd64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+          fi
 
           ARCH=("x86_64" "aarch64")
 
@@ -71,7 +75,9 @@ jobs:
           AMZN=("2" "2023")
           for AL in "${AMZN[@]}"; do
             for CPU in "${ARCH[@]}"; do
-              aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/
+              if [[ -f ${{ inputs.package-name }}*.${CPU}.rpm ]]; then
+                aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/
+              fi
             done
           done
 
@@ -79,6 +85,8 @@ jobs:
           ALPINE=("3.17" "3.18" "3.19")
           for ALP in "${ALPINE[@]}"; do
             for CPU in "${ARCH[@]}"; do
-              aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/
+              if [[ -f ${{ inputs.package-name }}*.${CPU}.apk ]]; then
+                aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/
+              fi
             done
           done
