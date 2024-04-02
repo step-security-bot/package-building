@@ -1,6 +1,6 @@
 ---
 # https://goreleaser.com/customization/project/
-project_name: gh-cli
+project_name: gh
 
 variables:
   Vendor: GitHub
