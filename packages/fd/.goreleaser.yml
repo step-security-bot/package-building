@@ -1,0 +1,31 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: fd
+
+variables:
+  Vendor: fd authors
+  VendorHomepage: https://github.com/sharkdp/fd
+  License: Apache-2.0, MIT
+  Description: |-
+    A simple, fast and user-friendly alternative to 'find'.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds_glibc_musl.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms_glibc_musl.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .

@@ -1,0 +1,24 @@
+---
+# https://goreleaser.com/customization/builds/#import-pre-built-binaries
+builds:
+  - id: prebuilt-glibc
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}_glibc_{{ .Arch }}"
+    binary: "{{ .ProjectName }}"
+
+  - id: prebuilt-musl
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}_musl_{{ .Arch }}"
+    binary: "{{ .ProjectName }}"
