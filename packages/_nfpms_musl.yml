@@ -1,0 +1,21 @@
+---
+# https://goreleaser.com/customization/nfpm/
+nfpms:
+  - id: package-musl
+    builds:
+      - prebuilt-musl
+    package_name: "{{ .ProjectName }}"
+    file_name_template: "{{ .ConventionalFileName }}"
+    vendor: "{{ .Var.Vendor }}"
+    homepage: "{{ .Var.VendorHomepage }}"
+    maintainer: Northwood Labs <packages@northwood-labs.com>
+    description: "{{ .Var.Description }}"
+    license: "{{ .Var.License }}"
+    formats:
+      - apk
+    umask: 0o002
+    release: 1
+    apk:
+      # signature:
+      #   key_file: "{{ .Env.GPG_KEY_PATH }}"
+      #   key_name: origin

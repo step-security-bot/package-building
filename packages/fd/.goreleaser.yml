@@ -16,11 +16,11 @@ includes:
   - from_file:
       path: ../_env.yml
   - from_file:
-      path: ../_builds_glibc_musl.yml
+      path: ../_builds_glibc.yml
   - from_file:
       path: ../_nightly.yml
   - from_file:
-      path: ../_nfpms_glibc_musl.yml
+      path: ../_nfpms_glibc.yml
 
 # https://goreleaser.com/customization/hooks/
 before:
