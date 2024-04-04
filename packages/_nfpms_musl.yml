@@ -17,5 +17,5 @@ nfpms:
     release: 1
     apk:
       signature:
-        key_file: 3C7658F0.asc
+        key_file: signing.pem
         key_name: "signing-keys@northwood-labs.com"
