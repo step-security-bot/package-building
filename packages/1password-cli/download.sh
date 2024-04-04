@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+apt-get -y update &&
+    apt-get -y install --no-install-recommends \
+        unzip \
+    ;
+
 OP_VER="$(curl -sSLf https://app-updates.agilebits.com/check/1/0/CLI2/en/2000001/N | jq -Mr '.version')"
 
 # linux/amd64 (Intel64)
