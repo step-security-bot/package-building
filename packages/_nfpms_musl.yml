@@ -16,6 +16,6 @@ nfpms:
     umask: 0o002
     release: 1
     apk:
-      # signature:
-      #   key_file: "{{ .Env.GPG_KEY_PATH }}"
-      #   key_name: origin
+      signature:
+        key_file: 3C7658F0.asc
+        key_name: "signing-keys@northwood-labs.com"

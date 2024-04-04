@@ -20,9 +20,9 @@ nfpms:
       summary: "{{ .Var.Description }}"
       packager: Northwood Labs <packages@northwood-labs.com>
       compression: lzma
-      # signature:
-      #   key_file: "{{ .Env.GPG_KEY_PATH }}"
+      signature:
+        key_file: 3C7658F0.asc
     deb:
-      # signature:
-      #   key_file: "{{ .Env.GPG_KEY_PATH }}"
-      #   type: origin
+      signature:
+        key_file: 3C7658F0.asc
+        type: archive
