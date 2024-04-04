@@ -1,0 +1,44 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: 1password-cli
+
+variables:
+  Vendor: Agile Bits
+  VendorHomepage: https://developer.1password.com/docs/cli/
+  License: Proprietary
+  Description: |-
+    1Password CLI brings 1Password to your terminal. Sign in to 1Password CLI
+    with your fingerprint, and securely access everything you need during
+    development.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
+
+# https://goreleaser.com/customization/builds/#import-pre-built-binaries
+builds:
+  - id: prebuilt
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    prebuilt:
+      path: "/usr/local/bin/op_{{ .Arch }}"
+    binary: "op"
