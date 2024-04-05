@@ -10,7 +10,7 @@
 # 2. go run generate-workflow.go -t _download-and-package.gotmpl.yml -p pandoc3 -r 'jgm/pandoc' -c '20 12 * * *'
 ################################################################################
 
-name: Build pandoc
+name: Build pandoc3
 on:
   workflow_dispatch:
   push:
