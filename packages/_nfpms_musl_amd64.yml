@@ -1,0 +1,25 @@
+---
+##
+# As of April 2024, many Rust projects are missing aarch64 musl builds.
+##
+
+# https://goreleaser.com/customization/nfpm/
+nfpms:
+  - id: package-musl-amd64
+    builds:
+      - prebuilt-musl-amd64
+    package_name: "{{ .ProjectName }}"
+    file_name_template: "{{ .ConventionalFileName }}"
+    vendor: "{{ .Var.Vendor }}"
+    homepage: "{{ .Var.VendorHomepage }}"
+    maintainer: Northwood Labs <packages@northwood-labs.com>
+    description: "{{ .Var.Description }}"
+    license: "{{ .Var.License }}"
+    formats:
+      - apk
+    umask: 0o002
+    release: 1
+    apk:
+      signature:
+        key_file: signing.pem
+        key_name: "signing-keys@northwood-labs.com"

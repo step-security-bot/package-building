@@ -1,0 +1,16 @@
+---
+##
+# As of April 2024, many Rust projects are missing aarch64 musl builds.
+##
+
+# https://goreleaser.com/customization/builds/#import-pre-built-binaries
+builds:
+  - id: prebuilt-musl-amd64
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}_musl_{{ .Arch }}"
+    binary: "{{ .ProjectName }}"

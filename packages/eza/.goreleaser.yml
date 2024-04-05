@@ -18,9 +18,13 @@ includes:
   - from_file:
       path: ../_builds_glibc.yml
   - from_file:
+      path: ../_builds_musl_amd64.yml
+  - from_file:
       path: ../_nightly.yml
   - from_file:
       path: ../_nfpms_glibc.yml
+  - from_file:
+      path: ../_nfpms_musl_amd64.yml
 
 # https://goreleaser.com/customization/hooks/
 before:
