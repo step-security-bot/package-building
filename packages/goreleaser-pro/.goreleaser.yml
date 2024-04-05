@@ -16,8 +16,6 @@ includes:
   - from_file:
       path: ../_env.yml
   - from_file:
-      path: ../_builds.yml
-  - from_file:
       path: ../_nightly.yml
   - from_file:
       path: ../_nfpms.yml
@@ -29,3 +27,16 @@ before:
         bash ./download.sh
       output: true
       dir: .
+
+# https://goreleaser.com/customization/builds/#import-pre-built-binaries
+builds:
+  - id: prebuilt
+    builder: prebuilt
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}_{{ .Arch }}"
+    binary: "goreleaser"
