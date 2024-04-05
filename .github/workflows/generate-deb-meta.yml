@@ -74,4 +74,4 @@ jobs:
               cat "dists/stable/main/binary-${CPU}/Packages" | gzip -9 > "dists/stable/main/binary-${CPU}/Packages.gz"
           done
 
-          bash ./generate-apt.sh /s3/apt > /s3/apt/dists/stable/Release
+          bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt > /s3/apt/dists/stable/Release
