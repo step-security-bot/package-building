@@ -5,6 +5,7 @@
 
 name: "Step: Generate RPM metadata"
 on:
+  workflow_dispatch:
   workflow_call:
     # We will pass secrets to the reusable workflow.
 
