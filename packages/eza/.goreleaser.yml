@@ -1,13 +1,13 @@
 ---
 # https://goreleaser.com/customization/project/
-project_name: fd
+project_name: eza
 
 variables:
-  Vendor: fd authors
-  VendorHomepage: https://github.com/sharkdp/fd
-  License: Apache-2.0, MIT
+  Vendor: eza authors
+  VendorHomepage: https://eza.rocks
+  License: MIT
   Description: |-
-    A simple, fast and user-friendly alternative to 'find'.
+    A modern, maintained replacement for ls.
 
 # https://goreleaser.com/customization/includes/
 includes:
@@ -18,13 +18,9 @@ includes:
   - from_file:
       path: ../_builds_glibc.yml
   - from_file:
-      path: ../_builds_musl_amd64.yml
-  - from_file:
       path: ../_nightly.yml
   - from_file:
       path: ../_nfpms_glibc.yml
-  - from_file:
-      path: ../_nfpms_musl_amd64.yml
 
 # https://goreleaser.com/customization/hooks/
 before:

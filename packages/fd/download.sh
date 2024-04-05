@@ -16,3 +16,5 @@ download-asset get \
     --archive-path "fd-v{{.Ver}}-aarch64-unknown-linux-gnu/fd" \
     --write-to-bin "fd_glibc_arm64" \
     ;
+
+# Already exists in the Alpine Linux repositories.

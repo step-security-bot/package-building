@@ -1,14 +1,15 @@
 ---
 # https://goreleaser.com/customization/project/
-project_name: git-cliff
+project_name: lychee
 
 variables:
-  Vendor: git-cliff authors
-  VendorHomepage: https://git-cliff.org
-  License: Apache-2.0, MIT
+  Vendor: lychee authors
+  VendorHomepage: https://eza.rocks
+  License: MIT
   Description: |-
-    A highly customizable Changelog Generator that follows Conventional Commit
-    specifications.
+    Fast, async, stream-based link checker written in Rust. Finds broken URLs
+    and mail addresses inside Markdown, HTML, reStructuredText, websites and
+    more!
 
 # https://goreleaser.com/customization/includes/
 includes:
@@ -19,9 +20,13 @@ includes:
   - from_file:
       path: ../_builds_glibc.yml
   - from_file:
+      path: ../_builds_musl_amd64.yml
+  - from_file:
       path: ../_nightly.yml
   - from_file:
       path: ../_nfpms_glibc.yml
+  - from_file:
+      path: ../_nfpms_musl_amd64.yml
 
 # https://goreleaser.com/customization/hooks/
 before:
