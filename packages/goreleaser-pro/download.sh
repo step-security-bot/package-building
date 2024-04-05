@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+rm -f /etc/download-asset/download-asset.toml
+
 # linux/amd64 (Intel64)
 download-asset get \
     --verbose \
