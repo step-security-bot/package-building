@@ -59,4 +59,13 @@ jobs:
               -o use_sse=kmsid:${AWSSSEKMSID} \
               ;
 
-          # Do stuff for deb
+          ARCH=("amd64" "arm64")
+
+          for CPU in ${ARCH[@]}; do
+            cd "/s3/apt" && \
+              mkdir -p "dists/stable/main/binary-${CPU}" && \
+              dpkg-scanpackages --arch "${CPU}" pool/ > "dists/stable/main/binary-${CPU}/Packages" && \
+              cat "dists/stable/main/binary-${CPU}/Packages" | gzip -9 > "dists/stable/main/binary-${CPU}/Packages.gz"
+          done
+
+          bash ./generate-apt.sh /s3/apt > /s3/apt/dist/stable/Release
