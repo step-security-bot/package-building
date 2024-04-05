@@ -1,6 +1,6 @@
 ---
 # https://goreleaser.com/customization/project/
-project_name: pandoc
+project_name: pandoc3
 
 variables:
   Vendor: pandoc authors

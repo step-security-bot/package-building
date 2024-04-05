@@ -89,7 +89,7 @@ jobs:
     uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
     secrets: inherit
     with:
-      package-name: "pandoc"
+      package-name: "pandoc3"
       package-version: ${{ needs.lookup.outputs.package_version }}
 
   metadata_rpm:
