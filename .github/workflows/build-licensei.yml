@@ -92,9 +92,16 @@ jobs:
       package-name: "licensei"
       package-version: ${{ needs.lookup.outputs.package_version }}
 
-  metadata:
+  metadata_rpm:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: upload
-    name: Generate metadata
+    name: RPM metadata
     uses: northwood-labs/package-building/.github/workflows/generate-rpm-meta.yml@main
+    secrets: inherit
+
+  metadata_deb:
+    if: needs.lookup.outputs.cache_hit != 'true'
+    needs: upload
+    name: DEB metadata
+    uses: northwood-labs/package-building/.github/workflows/generate-deb-meta.yml@main
     secrets: inherit
