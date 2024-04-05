@@ -5,7 +5,7 @@ set -euo pipefail
 download-asset get \
     --owner-repo "jgm/pandoc" \
     --pattern "pandoc-{{.Ver}}-linux-amd64.{{.Ext}}" \
-    --archive-path "pandoc" \
+    --archive-path "pandoc-{{.Ver}}/bin/pandoc" \
     --write-to-bin "pandoc_amd64" \
     ;
 
@@ -13,6 +13,6 @@ download-asset get \
 download-asset get \
     --owner-repo "jgm/pandoc" \
     --pattern "pandoc-{{.Ver}}-linux-arm64.{{.Ext}}" \
-    --archive-path "pandoc" \
+    --archive-path "pandoc-{{.Ver}}/bin/pandoc" \
     --write-to-bin "pandoc_arm64" \
     ;

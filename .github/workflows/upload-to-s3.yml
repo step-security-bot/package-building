@@ -19,7 +19,7 @@ defaults:
     shell: bash
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-upload
   cancel-in-progress: true
 
 # Variables available to all jobs defined in this file

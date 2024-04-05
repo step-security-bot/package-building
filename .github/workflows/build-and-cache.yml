@@ -15,7 +15,7 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-build-and-cache
   cancel-in-progress: true
 
 # Variables available to all jobs defined in this file
