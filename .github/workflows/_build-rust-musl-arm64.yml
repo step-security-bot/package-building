@@ -1,0 +1,56 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: "Step: Build Rust packages for musl-aarch64"
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+      package-version:
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-build-and-cache
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: Build and cache
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/alpine-v3.19:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged --platform=linux/arm64
+
+    steps:
+      - name: Compile for musl
+        working-directory: packages/${{ inputs.package-name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash ./compile-alpine-arm64.sh "${{ inputs.package-version }}"
+
+      - name: Cache the packages
+        uses: actions/cache/save@v4
+        id: cache-packages
+        with:
+          key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-aarch64"
+          path: "/usr/bin/${{ inputs.package-name }}_musl_arm64"

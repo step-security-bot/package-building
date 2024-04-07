@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+##
+# NOT USING THIS AT THE MOMENT.
+# Alpine Linux already packages at least a recent version of this package.
+##
+
 apk add build-base cargo cargo-auditable coreutils
 wget --header "Authorization: Bearer ${GITHUB_TOKEN}" https://github.com/sharkdp/fd/archive/v9.0.0/fd-9.0.0.tar.gz
 tar zxvf fd-9.0.0.tar.gz

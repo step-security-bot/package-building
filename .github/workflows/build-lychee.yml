@@ -76,12 +76,17 @@ jobs:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
     name: Compile for musl/aarch64
+    uses: northwood-labs/package-building/.github/workflows/_build-rust-musl-arm64.yml@main
+    secrets: inherit
+    with:
+      package-name: "lychee"
+      package-version: ${{ needs.lookup.outputs.package_version }}
 
   build:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: compile
     name: Build and cache
-    uses: northwood-labs/package-building/.github/workflows/build-and-cache.yml@main
+    uses: northwood-labs/package-building/.github/workflows/_build-and-cache.yml@main
     secrets: inherit
     with:
       package-name: "lychee"

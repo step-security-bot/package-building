@@ -46,6 +46,20 @@ jobs:
         with:
           ref: ${{ github.base_ref }}
 
+      - name: Restore any cached build artifacts (musl-aarch64)
+        uses: actions/cache/restore@v4
+        id: restore-musl-aarch64
+        with:
+          key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-aarch64"
+          path: "/usr/bin/${{ inputs.package-name }}_musl_arm64"
+
+      - name: Restore any cached build artifacts (musl-x86_64)
+        uses: actions/cache/restore@v4
+        id: restore-musl-x86_64
+        with:
+          key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-x86_64"
+          path: "/usr/bin/${{ inputs.package-name }}_musl_amd64"
+
       - name: Build the package
         working-directory: packages/${{ inputs.package-name }}
         env:

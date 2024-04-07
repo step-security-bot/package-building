@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+##
+# NOT USING THIS AT THE MOMENT.
+# Alpine Linux already packages at least a recent version of this package.
+##
+
 apk add build-base cargo cargo-auditable libgit2-dev zlib-dev
 wget --header "Authorization: Bearer ${GITHUB_TOKEN}" https://github.com/eza-community/eza/archive/v0.16.2/eza-0.16.2.tar.gz
 tar zxvf eza-0.16.2.tar.gz
