@@ -6,4 +6,4 @@ set -euo pipefail
 PKG_VER="${1}"
 
 # shellcheck disable=SC1091
-source compile-alpine.sh "${PKG_VER}" "amd64"
+source ./compile-alpine.sh "${PKG_VER}" "amd64"
