@@ -54,6 +54,7 @@ RUN apk add --no-cache \
     py3-virtualenv \
     python3 \
     python3-dev \
+    tree \
     unzip \
     util-linux \
     wget \
