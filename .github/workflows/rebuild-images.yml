@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
 
     outputs:
-      package_version: ${{ steps.changed_files.outputs.dockerfiles }}
+      dockerfiles: ${{ steps.changed_files.outputs.dockerfiles }}
 
     steps:
       - name: Git clone
