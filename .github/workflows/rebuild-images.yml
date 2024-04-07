@@ -55,6 +55,7 @@ jobs:
         run: |
           ./diff.sh ${{ github.event.before }} ${{ github.event.after }}
           echo "dockerfiles=$(jq -Mrc '.' .changed)" >> "$GITHUB_OUTPUT"
+          echo "$(jq -Mrc '.' .changed)" >> $GITHUB_STEP_SUMMARY
 
   build:
     needs: generate
