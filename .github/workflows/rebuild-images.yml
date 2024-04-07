@@ -40,7 +40,9 @@ jobs:
     strategy:
       fail-fast: false
 
-    # Steps represent a sequence of tasks that will be executed as part of the job.
+    outputs:
+      package_version: ${{ steps.changed_files.outputs.dockerfiles }}
+
     steps:
       - name: Git clone
         uses: actions/checkout@v4
