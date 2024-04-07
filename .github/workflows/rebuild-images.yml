@@ -50,7 +50,7 @@ jobs:
       - name: Get changed files
         id: changed_files
         run: |
-          ./diff.sh ${{ github.event.after }} HEAD
+          ./diff.sh ${{ github.event.after }}^ ${{ github.event.after }}
           echo "dockerfiles=$(jq -Mrc '.' .changed)" >> "$GITHUB_OUTPUT"
 
   build:
