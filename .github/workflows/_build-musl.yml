@@ -39,6 +39,11 @@ jobs:
           - arm64
 
     steps:
+      - name: Git clone
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
