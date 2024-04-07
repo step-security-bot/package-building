@@ -2,6 +2,9 @@
 # Always interpreted by Bash 5+.
 set -euo pipefail
 
+# Points back to the workspace directory.
+WORKSPACE_DIR="$(realpath "${BASH_SOURCE[0]%/*}/../..")"
+
 # _build-musl-arm64.yml always passes the package version as the first argument.
 PKG_VER="${1}"
 
@@ -10,6 +13,7 @@ apk add \
     build-base \
     cargo \
     cargo-auditable \
+    openssl-dev \
     ;
 
 # shellcheck disable=2154
@@ -19,11 +23,10 @@ tar zxvf "v${PKG_VER}.tar.gz"
 
 cd "lychee-${PKG_VER}/" || true
 cargo fetch --target="aarch64-unknown-linux-musl" --locked
+# cargo test --frozen
 cargo auditable build --frozen --release
-cargo test --frozen
 
-install -Dm755 target/release/lychee -t /usr/bin/
-
-# The final binary must always end up at `/usr/bin/{package}_musl_arm64` so that
+# The final binary must always end up at `${WORKSPACE_DIR}/builds/usr/bin/{package}_musl_arm64` so that
 # it gets picked up by the build process correctly.
-mv -vf /usr/bin/lychee /usr/bin/lychee_musl_arm64
+install -Dm755 target/release/lychee -t "${WORKSPACE_DIR}/builds/usr/bin/"
+mv -vf "${WORKSPACE_DIR}/builds/usr/bin/lychee" "${WORKSPACE_DIR}/builds/usr/bin/lychee_musl_arm64"

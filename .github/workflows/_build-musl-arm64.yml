@@ -27,26 +27,37 @@ env:
 permissions: read-all
 
 jobs:
-  generate:
+  # https://github.com/orgs/community/discussions/38728
+  compile:
     runs-on: ubuntu-latest
     name: Compile musl-aarch64
     strategy:
       fail-fast: false
-
-    container:
-      image: ghcr.io/northwood-labs/package-builder/alpine-v3.19:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-      options: --privileged --platform=linux/arm64
+      matrix:
+        arch:
+          # - docker: amd64 # used by docker create --platform
+          - docker: arm64
 
     steps:
-      - name: Compile for musl
-        working-directory: packages/${{ inputs.package-name }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: ${{ matrix.arch }}
+
+      - name: Run in Docker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash ./compile-alpine-arm64.sh "${{ inputs.package-version }}"
+          docker run \
+            --rm \
+            --env GITHUB_TOKEN \
+            --volume "$PWD:/${{ github.workspace }}" \
+            --workdir ${{ github.workspace }} \
+            --platform linux/${{ matrix.arch }} \
+            ghcr.io/northwood-labs/package-builder/alpine-v3.19:latest \
+            bash packages/${{ inputs.package-name }}/compile-alpine-arm64.sh "${{ inputs.package-version }}"
+
+            cp -vf "${{ github.workspace }}/builds/usr/bin/${{ inputs.package-name }}_musl_arm64" /usr/bin/${{ inputs.package-name }}_musl_arm64
 
       - name: Cache the packages
         uses: actions/cache/save@v4
