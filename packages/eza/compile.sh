@@ -6,8 +6,8 @@ tar zxvf eza-0.16.2.tar.gz
 
 cd eza-0.16.2/
 cargo fetch --target="aarch64-unknown-linux-musl" --locked
-cargo auditable build --frozen --release
 cargo fix --bin "eza" --allow-no-vcs
 cargo test --frozen
+cargo auditable build --frozen --release
 
 install -Dm755 target/release/eza -t "$pkgdir"/usr/bin/

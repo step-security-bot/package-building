@@ -55,7 +55,7 @@ jobs:
         run: |
           ./diff.sh ${{ github.event.before }} ${{ github.event.after }}
           echo "dockerfiles=$(jq -Mrc '.' .changed)" >> "$GITHUB_OUTPUT"
-          echo "~~~json"" >> $GITHUB_STEP_SUMMARY
+          echo "~~~json" >> $GITHUB_STEP_SUMMARY
           echo "$(jq -Mr '.' .changed)" >> $GITHUB_STEP_SUMMARY
           echo "~~~" >> $GITHUB_STEP_SUMMARY
 
