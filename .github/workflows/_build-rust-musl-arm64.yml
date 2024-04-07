@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "Step: Build Rust packages for musl-aarch64"
+name: "Step: Build packages for musl-aarch64"
 on:
   workflow_call:
     inputs:
@@ -29,7 +29,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Build and cache
+    name: Compile musl-aarch64
     strategy:
       fail-fast: false
 

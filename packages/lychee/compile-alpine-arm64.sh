@@ -2,7 +2,7 @@
 # Always interpreted by Bash 5+.
 set -euo pipefail
 
-# _build-rust-musl-arm64.yml always passes the package version as the first argument.
+# _build-musl-arm64.yml always passes the package version as the first argument.
 PKG_VER="${1}"
 
 # Install dependencies
