@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "Step: Build packages for musl-aarch64"
+name: "Step: Build packages for musl"
 on:
   workflow_call:
     inputs:
@@ -30,13 +30,13 @@ jobs:
   # https://github.com/orgs/community/discussions/38728
   compile:
     runs-on: ubuntu-latest
-    name: Compile musl-aarch64
+    name: "Compile musl-${{ matrix.arch }}"
     strategy:
       fail-fast: false
       matrix:
         arch:
-          # - docker: amd64 # used by docker create --platform
-          - docker: arm64
+          - amd64
+          - arm64
 
     steps:
       - name: Set up QEMU
@@ -55,13 +55,13 @@ jobs:
             --workdir ${{ github.workspace }} \
             --platform linux/${{ matrix.arch }} \
             ghcr.io/northwood-labs/package-builder/alpine-v3.19:latest \
-            bash packages/${{ inputs.package-name }}/compile-alpine-arm64.sh "${{ inputs.package-version }}"
+            bash packages/${{ inputs.package-name }}/compile-alpine-${{ matrix.arch }}.sh "${{ inputs.package-version }}"
 
-            cp -vf "${{ github.workspace }}/builds/usr/bin/${{ inputs.package-name }}_musl_arm64" /usr/bin/${{ inputs.package-name }}_musl_arm64
+            cp -vf "${{ github.workspace }}/builds/usr/bin/${{ inputs.package-name }}_musl_${{ matrix.arch }}" /usr/bin/${{ inputs.package-name }}_musl_${{ matrix.arch }}
 
       - name: Cache the packages
         uses: actions/cache/save@v4
         id: cache-packages
         with:
-          key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-aarch64"
-          path: "/usr/bin/${{ inputs.package-name }}_musl_arm64"
+          key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-${{ matrix.arch }}"
+          path: "/usr/bin/${{ inputs.package-name }}_musl_${{ matrix.arch }}"
