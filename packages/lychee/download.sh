@@ -26,4 +26,9 @@ download-asset get \
     ;
 
 # linux/arm64 (ARM64) musl
-# Need to build from source.
+download-asset get \
+    --owner-repo "lycheeverse/lychee" \
+    --pattern "lychee-v{{.Ver}}-arm-unknown-linux-musleabihf.{{.Ext}}" \
+    --archive-path "lychee" \
+    --write-to-bin "lychee_musl_arm64" \
+    ;
