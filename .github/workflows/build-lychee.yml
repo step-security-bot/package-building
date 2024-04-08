@@ -75,7 +75,7 @@ jobs:
   compile:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
-    name: Compile for musl/aarch64
+    name: Compile for musl
     uses: northwood-labs/package-building/.github/workflows/_build-musl.yml@main
     secrets: inherit
     with:
