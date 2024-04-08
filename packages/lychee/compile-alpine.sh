@@ -33,7 +33,12 @@ tar zxvf "v${PKG_VER}.tar.gz"
 cd "lychee-${PKG_VER}/" || true
 cargo fetch --target="${EARCH}-unknown-linux-musl" --locked
 # cargo test --frozen
-cargo auditable build --frozen --release
+
+case "${ARCH}" in
+"arm64") cargo auditable build --jobs 1 --frozen --release ;; # Slower, but scales better.
+"amd64") cargo auditable build --frozen --release ;;
+*) echo "Unknown architecture: ${ARCH}" && exit 1 ;;
+esac
 
 # The final binary must always end up at `${WORKSPACE_DIR}/builds/usr/bin/{package}_musl_{arch}` so that
 # it gets picked up by the build process correctly.
