@@ -38,11 +38,11 @@ cargo fetch --target="${EARCH}-unknown-linux-musl" --locked
 
 # Different build settings for aarch64 vs x86_64.
 # The `mold` linker is MUCH faster than `ld` or `lld`.
-case "${ARCH}" in
-"arm64") mold -run cargo auditable build --timings --frozen --release --jobs 1 ;; # Slower, but scales better.
-"amd64") mold -run cargo auditable build --timings --frozen --release ;;
-*) echo "Unknown architecture: ${ARCH}" && exit 1 ;;
-esac
+if [[ "${ARCH}" == "arm64" ]]; then
+    mold -run cargo auditable build --timings --frozen --release --jobs 1 # Slower, but scales better.
+elif [[ "${ARCH}" == "amd64" ]]; then
+    mold -run cargo auditable build --timings --frozen --release
+fi
 
 # The final binary must always end up at `${WORKSPACE_DIR}/builds/usr/bin/{package}_musl_{arch}` so that
 # it gets picked up by the build process correctly.
