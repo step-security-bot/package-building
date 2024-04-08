@@ -57,11 +57,6 @@ jobs:
       package_version: ${{ steps.lookup_version.outputs.package_version }}
 
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
-        with:
-          egress-policy: audit
-
       - name: Lookup latest version of package
         id: lookup_version
         env:
