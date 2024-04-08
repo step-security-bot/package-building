@@ -41,20 +41,25 @@ jobs:
       options: --privileged
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Git clone
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: ${{ github.base_ref }}
 
       - name: Restore any cached build artifacts (musl-aarch64)
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: restore-musl-aarch64
         with:
           key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-aarch64"
           path: "/usr/bin/${{ inputs.package-name }}_musl_arm64"
 
       - name: Restore any cached build artifacts (musl-x86_64)
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: restore-musl-x86_64
         with:
           key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-x86_64"
@@ -86,7 +91,7 @@ jobs:
           goreleaser release --clean --nightly --skip=announce,publish,validate --verbose
 
       - name: Cache the packages
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache-packages
         with:
           key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
