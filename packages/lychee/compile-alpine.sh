@@ -22,6 +22,8 @@ apk add \
     build-base \
     cargo \
     cargo-auditable \
+    lld \
+    mold \
     openssl-dev \
     ;
 
@@ -34,9 +36,11 @@ cd "lychee-${PKG_VER}/" || true
 cargo fetch --target="${EARCH}-unknown-linux-musl" --locked
 # cargo test --frozen
 
+# Different build settings for aarch64 vs x86_64.
+# The `mold` linker is MUCH faster than `ld` or `lld`.
 case "${ARCH}" in
-"arm64") cargo auditable build --jobs 1 --frozen --release ;; # Slower, but scales better.
-"amd64") cargo auditable build --frozen --release ;;
+"arm64") mold -run cargo auditable build --timings --frozen --release --jobs 1 ;; # Slower, but scales better.
+"amd64") mold -run cargo auditable build --timings --frozen --release ;;
 *) echo "Unknown architecture: ${ARCH}" && exit 1 ;;
 esac
 
