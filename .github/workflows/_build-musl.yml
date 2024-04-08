@@ -39,13 +39,18 @@ jobs:
           - arm64
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Git clone
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: ${{ github.base_ref }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
         with:
           platforms: ${{ matrix.arch }}
 
@@ -65,7 +70,7 @@ jobs:
             cp -vf "${{ github.workspace }}/builds/usr/bin/${{ inputs.package-name }}_musl_${{ matrix.arch }}" /usr/local/bin/${{ inputs.package-name }}_musl_${{ matrix.arch }}
 
       - name: Cache the packages
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache-packages
         with:
           key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-${{ matrix.arch }}"

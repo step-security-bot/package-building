@@ -57,6 +57,11 @@ jobs:
       package_version: ${{ steps.lookup_version.outputs.package_version }}
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Lookup latest version of package
         id: lookup_version
         env:
@@ -65,7 +70,7 @@ jobs:
           echo "package_version=$(download-asset latest-tag -r 'koalaman/shellcheck' -s)" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: check
         with:
           key: "shellcheck-${{ steps.lookup_version.outputs.package_version }}"
