@@ -15,6 +15,7 @@ nfpms:
       - apk
     umask: 0o002
     release: 1
+    bindir: /usr/local/bin
     apk:
       signature:
         key_file: signing.pem

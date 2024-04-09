@@ -1,0 +1,72 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: jenkins-remoting-runner
+
+variables:
+  Vendor: jenkins-remoting-runner authors
+  VendorHomepage: https://www.jenkins.io/projects/remoting/
+  License: MIT
+  Description: |-
+    Jenkins Remoting is primarily used in communications between the Jenkins
+    controller and Jenkins agents.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_nightly.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
+
+# https://goreleaser.com/customization/builds/#import-pre-built-binaries
+builds:
+  - id: prebuilt
+    builder: prebuilt
+    goos:
+      - linux
+    prebuilt:
+      path: "/usr/local/bin/{{ .ProjectName }}.jar"
+    binary: "{{ .ProjectName }}.jar"
+
+# https://goreleaser.com/customization/nfpm/
+nfpms:
+  - id: package
+    package_name: "{{ .ProjectName }}"
+    file_name_template: "{{ .ConventionalFileName }}"
+    builds:
+      - prebuilt
+    vendor: "{{ .Var.Vendor }}"
+    homepage: "{{ .Var.VendorHomepage }}"
+    maintainer: Northwood Labs <packages@northwood-labs.com>
+    description: "{{ .Var.Description }}"
+    license: "{{ .Var.License }}"
+    formats:
+      - apk
+      - deb
+      - rpm
+    umask: 0o002
+    release: 1
+    bindir: /usr/local/bin
+    rpm:
+      summary: "{{ .Var.Description }}"
+      packager: Northwood Labs <packages@northwood-labs.com>
+      compression: lzma
+      signature:
+        key_file: 3C7658F0.asc
+    deb:
+      signature:
+        key_file: 3C7658F0.asc
+        type: archive
+    apk:
+      signature:
+        key_file: signing.pem
+        key_name: "signing-keys@northwood-labs.com"

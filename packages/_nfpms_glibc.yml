@@ -16,6 +16,7 @@ nfpms:
       - rpm
     umask: 0o002
     release: 1
+    bindir: /usr/local/bin
     rpm:
       summary: "{{ .Var.Description }}"
       packager: Northwood Labs <packages@northwood-labs.com>
