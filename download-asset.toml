@@ -5,3 +5,11 @@ intel64      = "x86_64"
 pattern      = 'goreleaser-pro_{{.OS}}_{{.Arch}}.{{.Ext}}'
 archive-path = "goreleaser"
 write-to-bin = "goreleaser"
+
+[goreleaser.nfpm]
+linux        = "Linux"
+arm64        = "arm64"
+intel64      = "x86_64"
+pattern      = 'nfpm_{{.Ver}}_{{.OS}}_{{.Arch}}.{{.Ext}}'
+archive-path = "nfpm"
+write-to-bin = "nfpm"
