@@ -39,7 +39,7 @@ jobs:
             "alpine/Dockerfile.v3.19", # Until 2025-11-01
 
             "amzn/Dockerfile.v2", # Until 2025-06-30
-            # "amzn/Dockerfile.v2023", # Until 2028-03-15
+            "amzn/Dockerfile.v2023", # Until 2028-03-15
 
             "ubuntu/Dockerfile.v20.04", # Until 2025-04-02 (LTS)
             "ubuntu/Dockerfile.v22.04", # Until 2027-04-01 (LTS)
