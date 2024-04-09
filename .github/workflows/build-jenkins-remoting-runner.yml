@@ -68,7 +68,7 @@ jobs:
           echo "package_version=$(
             curl -sSL https://repo.jenkins-ci.org/artifactory/public/org/jenkins-ci/main/remoting/maven-metadata.xml \
               | xq -Mr '.metadata.versioning.latest' \
-              | sed -r 's,\.,.0.0-,'
+              | sed -r 's,\..*,.0.0,'
           )" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
