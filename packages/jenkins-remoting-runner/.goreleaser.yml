@@ -28,22 +28,19 @@ before:
       dir: .
 
 # https://goreleaser.com/customization/builds/#import-pre-built-binaries
-# builds:
-#   - id: prebuilt
-#     builder: prebuilt
-#     goos:
-#       - linux
-#     prebuilt:
-#       path: "/opt/jenkins/{{ .ProjectName }}.jar"
-#     binary: "{{ .ProjectName }}.jar"
+builds:
+  - id: prebuilt
+    builder: prebuilt
+    goos:
+      - linux
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
   - id: package
     package_name: "{{ .ProjectName }}"
     file_name_template: "{{ .PackageName }}_{{ .Version }}_noarch"
-    # builds:
-    #   - prebuilt
+    builds:
+      - prebuilt
     vendor: "{{ .Var.Vendor }}"
     homepage: "{{ .Var.VendorHomepage }}"
     maintainer: Northwood Labs <packages@northwood-labs.com>
