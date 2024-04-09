@@ -34,7 +34,8 @@ builds:
     goos:
       - linux
     prebuilt:
-      path: "/opt/jenkins/{{ .ProjectName }}.jar"
+      path: "/ust/local/bin/{{ .ProjectName }}"
+    binary: "{{ .ProjectName }}"
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
@@ -58,7 +59,7 @@ nfpms:
     contents:
       - src: /opt/jenkins/jenkins-remoting-runner.jar
         dst: /opt/jenkins/jenkins-remoting-runner.jar
-      - src: ./jenkins-remoting-runner.sh
+      - src: /usr/local/bin/jenkins-remoting-runner
         dst: /usr/local/bin/jenkins-remoting-runner
         file_info:
           mode: 0755

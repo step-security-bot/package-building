@@ -15,3 +15,10 @@ PKG_VER="$(
 mkdir -p /opt/jenkins/
 curl -sSL "https://repo.jenkins-ci.org/artifactory/public/org/jenkins-ci/main/remoting/${PKG_VER}/remoting-${PKG_VER}.jar" \
     --output /opt/jenkins/jenkins-remoting-runner.jar
+
+#-------------------------------------------------------------------------------
+
+SAME_DIR="$(realpath "${BASH_SOURCE[0]%/*}")"
+
+cp -vf "${SAME_DIR}/jenkins-remoting-runner.sh" /usr/local/bin/jenkins-remoting-runner
+chmod +x /usr/local/bin/jenkins-remoting-runner
