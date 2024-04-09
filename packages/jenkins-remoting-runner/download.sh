@@ -12,5 +12,6 @@ PKG_VER="$(
         xq -Mr '.metadata.versioning.latest'
 )"
 
+mkdir -p /opt/jenkins/
 curl -sSL "https://repo.jenkins-ci.org/artifactory/public/org/jenkins-ci/main/remoting/${PKG_VER}/remoting-${PKG_VER}.jar" \
-    --output /usr/local/bin/jenkins-remoting-runner.jar
+    --output /opt/jenkins/jenkins-remoting-runner.jar

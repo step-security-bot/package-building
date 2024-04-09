@@ -34,14 +34,14 @@ builds:
     goos:
       - linux
     prebuilt:
-      path: "/usr/local/bin/{{ .ProjectName }}.jar"
+      path: "/opt/jenkins/{{ .ProjectName }}.jar"
     binary: "{{ .ProjectName }}.jar"
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
   - id: package
     package_name: "{{ .ProjectName }}"
-    file_name_template: "{{ .ConventionalFileName }}"
+    file_name_template: "{{ .PackageName }}_{{ .Version }}_noarch"
     builds:
       - prebuilt
     vendor: "{{ .Var.Vendor }}"
@@ -56,6 +56,15 @@ nfpms:
     umask: 0o002
     release: 1
     bindir: /usr/local/bin
+    contents:
+      - src: /opt/jenkins/jenkins-remoting-runner.jar
+        dst: /opt/jenkins/jenkins-remoting-runner.jar
+      - src: ./jenkins-remoting-runner.sh
+        dst: /usr/local/bin/jenkins-remoting-runner
+        file_info:
+          mode: 0755
+    scripts:
+      postinstall: postinstall.sh
     rpm:
       summary: "{{ .Var.Description }}"
       packager: Northwood Labs <packages@northwood-labs.com>
