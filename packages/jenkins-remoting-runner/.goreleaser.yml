@@ -33,6 +33,8 @@ builds:
     builder: prebuilt
     goos:
       - linux
+    prebuilt:
+      path: "/opt/jenkins/{{ .ProjectName }}.jar"
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
