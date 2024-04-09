@@ -5,7 +5,7 @@
 
 {{ .DoNotEdit }}
 
-name: Build {{ .Package }}
+name: "📦 Build {{ .Package }}"
 on:
   workflow_dispatch:
   push:
@@ -70,7 +70,7 @@ jobs:
   build:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
-    name: Build and cache
+    name: "📦 Build and cache"
     uses: northwood-labs/package-building/.github/workflows/_build-and-cache.yml@main
     secrets: inherit
     with:

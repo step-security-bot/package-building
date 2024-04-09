@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: Build lychee
+name: "📦 Build lychee"
 
 "on":
   workflow_dispatch: null
@@ -87,7 +87,7 @@ jobs:
     if: needs.lookup.outputs.cache_hit != 'true'
     # needs: compile
     needs: lookup
-    name: Build and cache
+    name: "📦 Build and cache"
     uses: northwood-labs/package-building/.github/workflows/_build-and-cache.yml@main
     secrets: inherit
     with:

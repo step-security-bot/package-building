@@ -70,7 +70,7 @@ jobs:
       matrix:
         dockerfile: ${{ fromJson(needs.generate.outputs.dockerfiles) }}
 
-    name: Build ${{ matrix.dockerfile }}
+    name: "📦 Build ${{ matrix.dockerfile }}"
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
@@ -101,7 +101,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build the Docker image (multiarch)
+      - name: "📦 Build the Docker image (multiarch)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

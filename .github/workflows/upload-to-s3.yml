@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "Step: Upload to S3"
+name: "🎯 Upload to S3"
 on:
   workflow_call:
     inputs:

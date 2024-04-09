@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "Step: Build and cache"
+name: "🎯 Build and cache"
 on:
   workflow_call:
     inputs:
@@ -29,7 +29,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Build and cache
+    name: "📦 Build and cache"
     strategy:
       fail-fast: false
 
@@ -60,7 +60,7 @@ jobs:
           key: "build-cache-${{ inputs.package-name }}-${{ inputs.package-version }}-musl-x86_64"
           path: "/usr/bin/${{ inputs.package-name }}_musl_amd64"
 
-      - name: Build the package
+      - name: "📦 Build the package"
         working-directory: packages/${{ inputs.package-name }}
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

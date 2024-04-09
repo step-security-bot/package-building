@@ -10,7 +10,7 @@
 # 2. go run generate-workflow.go -t _download-and-package.gotmpl.yml -p golines -r 'segmentio/golines' -c '10 7 * * *'
 ################################################################################
 
-name: Build golines
+name: "📦 Build golines"
 on:
   workflow_dispatch:
   push:
@@ -75,7 +75,7 @@ jobs:
   build:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
-    name: Build and cache
+    name: "📦 Build and cache"
     uses: northwood-labs/package-building/.github/workflows/_build-and-cache.yml@main
     secrets: inherit
     with:

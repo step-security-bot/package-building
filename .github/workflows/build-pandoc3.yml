@@ -10,7 +10,7 @@
 # 2. go run generate-workflow.go -t _download-and-package.gotmpl.yml -p pandoc3 -r 'jgm/pandoc' -c '20 12 * * *'
 ################################################################################
 
-name: Build pandoc3
+name: "📦 Build pandoc3"
 on:
   workflow_dispatch:
   push:
@@ -75,7 +75,7 @@ jobs:
   build:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
-    name: Build and cache
+    name: "📦 Build and cache"
     uses: northwood-labs/package-building/.github/workflows/_build-and-cache.yml@main
     secrets: inherit
     with:
