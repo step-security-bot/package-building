@@ -13,6 +13,7 @@ ignored:
 
   # Amazon Linux
   - DL3033 # https://github.com/hadolint/hadolint/wiki/DL3033 (Pin versions in yum install)
+  - DL3041 # https://github.com/hadolint/hadolint/wiki/DL3033 (Pin versions in dnf install)
 
   # Dockerfile
   - DL3047 # https://github.com/hadolint/hadolint/wiki/DL3047 (wget --progress)

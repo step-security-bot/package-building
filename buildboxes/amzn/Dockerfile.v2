@@ -18,7 +18,7 @@ ENV PIP_ROOT_USER_ACTION ignore
 ENV PATH "/root/go/bin:$PATH"
 
 # Helper
-ENV GO_VER 1.22.1
+ENV GO_VER 1.22.2
 
 RUN yum -y update && \
     yum -y upgrade && \
@@ -69,8 +69,7 @@ RUN ln -s "$(which python3.8)" /usr/bin/python3 && \
         certifi \
         ;
 
-RUN --mount=type=secret,id=GITHUB_TOKEN \
-    go install golang.org/dl/go${GO_VER}@latest && \
+RUN go install golang.org/dl/go${GO_VER}@latest && \
     go${GO_VER} download && \
     yum -y remove golang && \
     ln -s /root/go/bin/go${GO_VER} /usr/bin/go

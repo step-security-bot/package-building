@@ -1,0 +1,101 @@
+# syntax=docker/dockerfile:1
+FROM --platform=$TARGETPLATFORM amazonlinux:2023
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
+
+# Informational
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM."
+
+# Identify ourselves
+ENV OS_DIST amzn
+ENV OS_DIST_VER 2023
+ENV OS_DIST_PKG rpm
+
+# Environment variables
+ENV CGO_ENABLED 0
+ENV PIP_ROOT_USER_ACTION ignore
+ENV PATH "/root/go/bin:$PATH"
+
+# Helper
+ENV GO_VER 1.22.2
+ENV S3FS_VER 1.94
+
+RUN dnf -y update && \
+    dnf -y upgrade && \
+    dnf -y groupinstall "Development Tools" && \
+    dnf -y install \
+        awscli-2 \
+        cmake-filesystem \
+        createrepo \
+        dnf-utils \
+        docker \
+        fuse \
+        fuse-common \
+        fuse-devel \
+        golang \
+        gzip \
+        jq \
+        libcurl-devel \
+        libxml2-devel \
+        nano \
+        ncurses-devel \
+        openssh-clients \
+        openssl-devel \
+        python3.11 \
+        python3.11-devel \
+        python3.11-libs \
+        python3.11-pip \
+        python3.11-pip-wheel \
+        python3.11-wheel \
+        python3.11-wheel-wheel \
+        readline-devel \
+        util-linux \
+        wget \
+        which \
+        xz-devel \
+    && \
+    dnf clean all && \
+    rm -rf /var/cache/dnf* \
+    ;
+
+# Compile s3fs from source, then clean-up.
+RUN git clone https://github.com/s3fs-fuse/s3fs-fuse.git --branch "v${S3FS_VER}" --single-branch /tmp/s3fs-fuse
+WORKDIR /tmp/s3fs-fuse
+RUN ./autogen.sh && \
+    ./configure --prefix=/usr --with-openssl && \
+    make && make install
+WORKDIR /
+RUN rm -Rf /tmp/*
+
+RUN $(which python3.11) -m pip install --upgrade pip && \
+    $(which python3.11) -m pip install --upgrade \
+        certifi \
+        ;
+
+RUN go install golang.org/dl/go${GO_VER}@latest && \
+    go${GO_VER} download && \
+    dnf -y remove golang && \
+    ln -s /root/go/bin/go${GO_VER} /usr/bin/go
+
+COPY download-asset.toml /etc/download-asset/download-asset.toml
+RUN go install github.com/northwood-labs/download-asset@latest
+
+RUN --mount=type=secret,id=GITHUB_TOKEN GITHUB_TOKEN="$(cat /run/secrets/GITHUB_TOKEN)" \
+    download-asset get --owner-repo goreleaser/goreleaser-pro
+
+# Labels
+ARG BUILD_DATE
+ARG VCS_REF
+
+# https://github.com/opencontainers/image-spec/blob/master/annotations.md
+LABEL org.opencontainers.image.title="Package Builder: Amazon Linux 2023"
+LABEL org.opencontainers.image.description="Container image to help facilitate building packages for Amazon Linux."
+LABEL org.opencontainers.image.url="https://github.com/northwood-labs/package-building"
+LABEL org.opencontainers.image.documentation="https://github.com/northwood-labs/package-building/wiki"
+LABEL org.opencontainers.image.vendor="Northwood Labs"
+LABEL org.opencontainers.image.authors="Ryan Parman <rparman@northwood-labs.com>"
+LABEL org.opencontainers.image.created="$BUILD_DATE"
+LABEL org.opencontainers.image.source="git@github.com:northwood-labs/package-building.git"
+LABEL org.opencontainers.image.revision="$VCS_REF"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
