@@ -59,6 +59,8 @@ jobs:
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
           echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
 
+          bash ./download.sh
+
           # Build the package
           mkdir -p ./dist
           nfpm package --packager apk --target ./dist
