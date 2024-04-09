@@ -1,0 +1,51 @@
+name: jenkins-remoting-runner
+arch: all
+platform: linux
+version: ${PKG_VER}
+version_schema: none
+version_metadata: git
+release: 1
+section: default
+maintainer: Northwood Labs <packages@northwood-labs.com>
+description: |-
+  Jenkins Remoting is primarily used in communications between the Jenkins
+  controller and Jenkins agents.
+vendor: jenkins-remoting-runner authors
+homepage: https://www.jenkins.io/projects/remoting/
+license: MIT
+disable_globbing: false
+provides:
+  - jenkins-remoting-runner
+suggests:
+  - java-1.8.0-amazon-corretto
+  - java-11-amazon-corretto
+  - java-17-amazon-corretto
+  - java-21-amazon-corretto
+  - openjdk8
+  - openjdk11
+  - openjdk17
+  - openjdk21
+contents:
+  - src: /opt/jenkins/jenkins-remoting-runner.jar
+    dst: /opt/jenkins/jenkins-remoting-runner.jar
+  - src: /usr/local/bin/jenkins-remoting-runner
+    dst: /usr/local/bin/jenkins-remoting-runner
+    file_info:
+      mode: 0755
+umask: 0o002
+scripts:
+  postinstall: postinstall.sh
+rpm:
+  summary: "{{ .Var.Description }}"
+  packager: Northwood Labs <packages@northwood-labs.com>
+  compression: lzma
+  signature:
+    key_file: 3C7658F0.asc
+deb:
+  signature:
+    key_file: 3C7658F0.asc
+    type: archive
+apk:
+  signature:
+    key_file: signing.pem
+    key_name: "signing-keys@northwood-labs.com"

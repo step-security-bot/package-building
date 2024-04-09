@@ -67,8 +67,7 @@ jobs:
           pip install --upgrade yq
           echo "package_version=$(
             curl -sSL https://repo.jenkins-ci.org/artifactory/public/org/jenkins-ci/main/remoting/maven-metadata.xml \
-              | xq -Mr '.metadata.versioning.latest' \
-              | sed -r 's,\..*,.0.0,'
+              | xq -Mr '.metadata.versioning.latest'
           )" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
@@ -82,8 +81,8 @@ jobs:
   build:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
-    name: "📦 Build and cache"
-    uses: northwood-labs/package-building/.github/workflows/_build-and-cache.yml@main
+    name: "📦 Build and cache (nFPM)"
+    uses: northwood-labs/package-building/.github/workflows/_build-and-cache-nfpm.yml@main
     secrets: inherit
     with:
       package-name: "jenkins-remoting-runner"

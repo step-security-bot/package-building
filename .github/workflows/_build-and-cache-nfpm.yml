@@ -1,0 +1,73 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: "🎯 Step: Build and cache (nFPM)"
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+      package-version:
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-build-and-cache-nfpm
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    name: "📦 Build and cache (nFPM)"
+    strategy:
+      fail-fast: false
+
+    container:
+      image: ghcr.io/northwood-labs/package-builder/ubuntu-v22.04:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
+
+    steps:
+      - name: Git clone
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: "📦 Build the package (nFPM)"
+        working-directory: packages/${{ inputs.package-name }}
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GPG_KEY_B64: ${{ secrets.GPG_KEY_B64 }}
+          NFPM_PASSPHRASE: "${{ secrets.GPG_PWD }}"
+          PKG_VER: "${{ inputs.package-version }}"
+          RSA_KEY_B64: ${{ secrets.RSA_KEY_B64 }}
+        run: |
+          # Decode the contents into files.
+          echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
+          echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
+
+          # Build the package
+          mkdir -p ./dist
+          nfpm package --packager apk --target ./dist
+          nfpm package --packager deb --target ./dist
+          nfpm package --packager rpm --target ./dist
+
+      - name: Cache the packages
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        id: cache-packages
+        with:
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
+          path: packages/${{ inputs.package-name }}/dist
