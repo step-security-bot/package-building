@@ -3,7 +3,7 @@
 # by a third-party and are governed by separate terms of service, privacy
 # policy, and support documentation.
 
-name: "🎯 Build and cache"
+name: "🎯 Step: Build and cache"
 on:
   workflow_call:
     inputs:
