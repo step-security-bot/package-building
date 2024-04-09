@@ -31,8 +31,6 @@ before:
 builds:
   - id: prebuilt
     builder: prebuilt
-    goos:
-      - linux
     prebuilt:
       path: "/opt/jenkins/{{ .ProjectName }}.jar"
     binary: "{{ .ProjectName }}.jar"
