@@ -78,7 +78,8 @@ COPY download-asset.toml /etc/download-asset/download-asset.toml
 RUN go install github.com/northwood-labs/download-asset@latest
 
 RUN --mount=type=secret,id=GITHUB_TOKEN GITHUB_TOKEN="$(cat /run/secrets/GITHUB_TOKEN)" \
-    download-asset get --owner-repo goreleaser/goreleaser-pro && \
+    download-asset get --owner-repo goreleaser/goreleaser-pro
+RUN --mount=type=secret,id=GITHUB_TOKEN GITHUB_TOKEN="$(cat /run/secrets/GITHUB_TOKEN)" \
     download-asset get --owner-repo goreleaser/nfpm
 
 # Labels
