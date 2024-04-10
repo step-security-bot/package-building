@@ -73,7 +73,8 @@ jobs:
           NFPM_PASSPHRASE: "${{ secrets.GPG_PWD }}"
         run: |
           # Shallow clone
-          git clone "${{ inputs.clone-repository }}" --branch "v${{ inputs.package-version }}" --single-branch
+          git clone "${{ inputs.clone-repository }}" --branch "v${{ inputs.package-version }}" --single-branch __BUILD__
+          cd ./__BUILD__
           git config --global --add safe.directory "${{ github.workspace }}"
 
           # Decode the contents into files.
