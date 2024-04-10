@@ -74,6 +74,7 @@ jobs:
         run: |
           # Shallow clone
           git clone "${{ inputs.clone-repository }}" --branch "v${{ inputs.package-version }}" --single-branch
+          git config --global --add safe.directory "${{ github.workspace }}"
 
           # Decode the contents into files.
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
