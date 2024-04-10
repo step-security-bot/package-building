@@ -40,6 +40,11 @@ jobs:
       options: --privileged
 
     steps:
+      - name: "Checkout code"
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+        with:
+          persist-credentials: false
+
       - name: Mount s3fs and generate metadata
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -48,6 +53,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
+          RSA_KEY_B64: ${{ secrets.RSA_KEY_B64 }}
         run: |
           echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > ${HOME}/.passwd-s3fs
           chmod 600 ${HOME}/.passwd-s3fs
@@ -60,4 +66,17 @@ jobs:
               -o use_sse=kmsid:${AWSSSEKMSID} \
               ;
 
-          # Do stuff for apk
+          echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
+
+          ALPINE=("3.17" "3.18" "3.19")
+          ARCH=("x86_64" "aarch64", "all")
+
+          for ALP in "${ALPINE[@]}"; do
+            for CPU in "${ARCH[@]}"; do
+              if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}*_${CPU}.apk") ]]; then
+                cd "/s3/apk/v${ALP}/main/${CPU}/" && \
+                  apk index --verbose --update-cache --output APKINDEX.tar.gz *.apk
+                abuild-sign --private "${{ github.repository }}/signing.pem" "/s3/apk/v${ALP}/main/${CPU}/APKINDEX.tar.gz"
+              fi
+            done
+          done

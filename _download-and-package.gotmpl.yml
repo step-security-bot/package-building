@@ -100,3 +100,10 @@ jobs:
     name: DEB metadata
     uses: northwood-labs/package-building/.github/workflows/generate-deb-meta.yml@main
     secrets: inherit
+
+  metadata_apk:
+    if: needs.lookup.outputs.cache_hit != 'true'
+    needs: upload
+    name: APK metadata
+    uses: northwood-labs/package-building/.github/workflows/generate-apk-meta.yml@main
+    secrets: inherit
