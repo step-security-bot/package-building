@@ -1,0 +1,31 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: semantic-release
+
+variables:
+  Vendor: semantic-release authors
+  VendorHomepage: https://go-semantic-release.xyz
+  License: MIT
+  Description: |
+    Semantic-release written in Go.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
