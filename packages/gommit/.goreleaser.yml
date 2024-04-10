@@ -1,13 +1,13 @@
 ---
 # https://goreleaser.com/customization/project/
-project_name: ncdu
+project_name: gommit
 
 variables:
-  Vendor: ncdu authors
-  VendorHomepage: https://dev.yorhel.nl/ncdu
-  License: MIT
+  Vendor: gommit authors
+  VendorHomepage: https://github.com/antham/gommit
+  License: Apache-2.0
   Description: |
-    NCurses Disk Usage is a disk usage analyzer with an ncurses interface.
+    Enforce git message commit consistency.
 
 # https://goreleaser.com/customization/includes/
 includes:
