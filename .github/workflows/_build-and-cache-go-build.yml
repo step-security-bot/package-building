@@ -74,6 +74,15 @@ jobs:
           PKG_VER: "${{ inputs.package-version }}"
           RSA_KEY_B64: ${{ secrets.RSA_KEY_B64 }}
         run: |
+          # We just need to set a git tag. None of the rest of this matters.
+          git init
+          git config user.email "you@example.com"
+          git config user.name "Your Name"
+          git add .
+          git commit -m "Test"
+          git remote add origin https://example.com
+          git tag "${{ inputs.package-version }}"
+
           # Decode the contents into files.
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
           echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
