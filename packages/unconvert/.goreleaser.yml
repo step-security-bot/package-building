@@ -4,7 +4,7 @@ project_name: unconvert
 
 variables:
   Vendor: unconvert authors
-  VendorHomepage: https://github.com/mdempsky/unconvert
+  VendorHomepage: https://github.com/northwood-labs/unconvert
   License: BSD-3-Clause
   Description: |
     Remove unnecessary type conversions from Go source.
