@@ -46,7 +46,6 @@ RUN apk add --no-cache \
     py3-virtualenv \
     python3 \
     python3-dev \
-    s3fs-fuse \
     unzip \
     util-linux \
     wget \
@@ -54,6 +53,11 @@ RUN apk add --no-cache \
     zlib-dev \
     ;
 
+{{ if eq .AlpineVersion "3.19" -}}RUN apk add --no-cache \
+    s3fs-fuse \
+    ;
+
+{{ end -}}
 COPY download-asset.toml /etc/download-asset/download-asset.toml
 RUN go install github.com/northwood-labs/download-asset@latest
 

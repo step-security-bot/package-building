@@ -51,12 +51,15 @@ RUN apk add --no-cache \
     py3-virtualenv \
     python3 \
     python3-dev \
-    s3fs-fuse \
     unzip \
     util-linux \
     wget \
     xz \
     zlib-dev \
+    ;
+
+RUN apk add --no-cache \
+    s3fs-fuse \
     ;
 
 COPY download-asset.toml /etc/download-asset/download-asset.toml
