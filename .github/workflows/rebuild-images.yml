@@ -33,7 +33,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Build
+    name: "🛠️ Generate"
     permissions:
       packages: write
       contents: read
@@ -101,7 +101,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "📦 Build the Docker image (multiarch)"
+      - name: "Build the Docker image (multiarch)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

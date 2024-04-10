@@ -3,7 +3,6 @@ arch: all
 platform: linux
 version: ${PKG_VER}
 version_schema: none
-version_metadata: git
 release: 1
 section: default
 maintainer: Northwood Labs <packages@northwood-labs.com>

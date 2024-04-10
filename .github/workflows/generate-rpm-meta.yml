@@ -28,7 +28,7 @@ permissions: read-all
 jobs:
   generate:
     runs-on: ubuntu-latest
-    name: Mount s3fs
+    name: s3fs
     strategy:
       fail-fast: false
 
