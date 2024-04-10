@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-##
-# Git repo should be already cloned by now.
-##
+# shellcheck disable=2154
+git clone "${CLONE_REPO}" --branch "v${PKG_VER}" --single-branch /tmp/__BUILD__
+cd /tmp/__BUILD__
 
 # linux/amd64 (Intel64)
 GOARCH=amd64 go build -ldflags "-w -s" -trimpath -x -o /usr/local/bin/gommit_amd64 .
