@@ -1,0 +1,31 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: meteor
+
+variables:
+  Vendor: meteor authors
+  VendorHomepage: https://github.com/stefanlogue/meteor
+  License: MIT
+  Description: |
+    A highly configurable CLI tool for writing conventional commits.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
