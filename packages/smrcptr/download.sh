@@ -6,7 +6,7 @@ echo "Clone repo: ${CLONE_REPO} @ ${PKG_VER} to /tmp/__BUILD__"
 echo "================================================================================"
 
 # shellcheck disable=2154
-git clone "${CLONE_REPO}" --branch "${PKG_VER}" --single-branch /tmp/__BUILD__
+git clone "${CLONE_REPO}" --branch "v${PKG_VER}" --single-branch /tmp/__BUILD__
 cd /tmp/__BUILD__
 
 # linux/amd64 (Intel64)
