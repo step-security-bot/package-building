@@ -1,0 +1,31 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: go-consistent
+
+variables:
+  Vendor: go-consistent authors
+  VendorHomepage: https://github.com/quasilyte/go-consistent
+  License: MIT
+  Description: |
+    Source code analyzer that helps you to make your Go programs more consistent.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
