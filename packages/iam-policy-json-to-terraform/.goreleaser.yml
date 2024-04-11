@@ -1,0 +1,32 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: iam-policy-json-to-terraform
+
+variables:
+  Vendor: iam-policy-json-to-terraform authors
+  VendorHomepage: https://flosell.github.io/iam-policy-json-to-terraform
+  License: MIT
+  Description: |-
+    Small tool to convert an IAM Policy in JSON format into a Terraform
+    'aws_iam_policy_document'.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
