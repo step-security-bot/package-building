@@ -80,7 +80,7 @@ jobs:
     secrets: inherit
     with:
       package-name: "aws-session-manager-plugin"
-      package-version: "${{ needs.lookup.outputs.package_version }}.0"
+      package-version: ${{ needs.lookup.outputs.package_version }}
       clone-repository: https://github.com/aws/session-manager-plugin
 
   upload:
