@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# https://docs.aws.amazon.com/systems-manager/latest/userguide/manually-install-ssm-agent-linux.html
 
 # shellcheck disable=2154
 mkdir -p "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist"

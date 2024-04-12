@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/download-cloudwatch-agent-commandline.html
 
 # shellcheck disable=2154
 mkdir -p "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist"
