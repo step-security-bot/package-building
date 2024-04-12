@@ -81,7 +81,6 @@ jobs:
     with:
       package-name: "amazon-ssm-agent"
       package-version: ${{ needs.lookup.outputs.package_version }}
-      clone-repository: https://github.com/aws/amazon-ssm-agent
 
   upload:
     if: needs.lookup.outputs.cache_hit != 'true'

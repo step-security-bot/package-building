@@ -13,9 +13,6 @@ on:
       package-version:
         required: true
         type: string
-      clone-repository:
-        required: true
-        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-build-and-cache-prebuilt

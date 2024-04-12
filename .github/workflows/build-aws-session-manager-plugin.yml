@@ -76,12 +76,11 @@ jobs:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: lookup
     name: "📦 Build and cache"
-    uses: northwood-labs/package-building/.github/workflows/_build-and-cache-go-build.yml@main
+    uses: northwood-labs/package-building/.github/workflows/_build-and-cache-prebuilt.yml@main
     secrets: inherit
     with:
       package-name: "aws-session-manager-plugin"
       package-version: ${{ needs.lookup.outputs.package_version }}
-      clone-repository: https://github.com/aws/session-manager-plugin
 
   upload:
     if: needs.lookup.outputs.cache_hit != 'true'
