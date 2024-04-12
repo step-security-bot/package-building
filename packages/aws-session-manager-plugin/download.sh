@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "================================================================================"
-echo "Clone repo: ${CLONE_REPO} @ ${PKG_VER} to /tmp/__BUILD__"
-echo "================================================================================"
-
+# linux/amd64 (Intel64) RPM
 # shellcheck disable=2154
-git clone "${CLONE_REPO}" --branch "${PKG_VER}.0" --single-branch /tmp/__BUILD__
-cd /tmp/__BUILD__
+wget "https://s3.amazonaws.com/session-manager-downloads/plugin/${PKG_VER}/linux_64bit/session-manager-plugin.rpm" \
+    --output-document "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist/${PKG_NAME}-${PKG_VER}-1.x86_64.rpm"
 
-go mod init session-manager-plugin
-go mod tidy
-go get github.com/twinj/uuid@990eabe
+# linux/arm64 (ARM64) RPM
+# shellcheck disable=2154
+wget "https://s3.amazonaws.com/session-manager-downloads/plugin/${PKG_VER}/linux_arm64/session-manager-plugin.rpm" \
+    --output-document "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist/${PKG_NAME}-${PKG_VER}-1.aarch64.rpm"
 
-# linux/amd64 (Intel64)
-# https://github.com/aws/session-manager-plugin/blob/e12e3d7a44af6321f3c12d156df7f60b596f6628/makefile#L87-L88
-GOARCH=amd64 go build -mod=readonly -ldflags "-s -w" -o /usr/local/bin/session-manager-plugin_amd64 -v src/sessionmanagerplugin-main/main.go
+# linux/amd64 (Intel64) DEB
+# shellcheck disable=2154
+wget "https://s3.amazonaws.com/session-manager-downloads/plugin/${PKG_VER}/ubuntu_64bit/session-manager-plugin.deb" \
+    --output-document "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist/${PKG_NAME}_${PKG_VER}-1_amd64.deb"
 
-# linux/arm64 (ARM64)
-# https://github.com/aws/session-manager-plugin/blob/e12e3d7a44af6321f3c12d156df7f60b596f6628/makefile#L109-L110
-GOARCH=arm64 go build -mod=readonly -ldflags "-s -w -extldflags=-Wl,-z,now,-z,relro,-z,defs" -o /usr/local/bin/session-manager-plugin_arm64 -v src/sessionmanagerplugin-main/main.go
+# linux/arm64 (ARM64) DEB
+# shellcheck disable=2154
+wget "https://s3.amazonaws.com/session-manager-downloads/plugin/${PKG_VER}/ubuntu_arm64/session-manager-plugin.deb" \
+    --output-document "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist/${PKG_NAME}_${PKG_VER}-1_arm64.deb"

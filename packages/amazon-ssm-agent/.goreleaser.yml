@@ -1,14 +1,14 @@
 ---
 # https://goreleaser.com/customization/project/
-project_name: aws-session-manager-plugin
+project_name: amazon-ssm-agent
 
 variables:
-  Vendor: aws-session-manager-plugin authors
-  VendorHomepage: https://github.com/aws/session-manager-plugin
+  Vendor: amazon-ssm-agent authors
+  VendorHomepage: https://aws.amazon.com/systems-manager/
   License: Apache-2.0
   Description: |-
-    This plugin helps you to use the AWS Command Line Interface (AWS CLI) to
-    start and end sessions to your managed instances.
+    An agent to enable remote management of your EC2 instances, on-premises
+    servers, or virtual machines (VMs).
 
 # https://goreleaser.com/customization/includes/
 includes:
