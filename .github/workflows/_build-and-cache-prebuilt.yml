@@ -54,7 +54,6 @@ jobs:
           PKG_NAME: "${{ inputs.package-name }}"
         run: |
           # We're pulling already-built packages.
-          mkdir -p packages/${{ inputs.package-name }}/dist
           bash ./download.sh
 
       - name: Cache the packages

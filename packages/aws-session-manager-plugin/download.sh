@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# shellcheck disable=2154
+mkdir -p "${GITHUB_WORKSPACE}/packages/${PKG_NAME}/dist"
+
 # linux/amd64 (Intel64) RPM
 # shellcheck disable=2154
 wget "https://s3.amazonaws.com/session-manager-downloads/plugin/${PKG_VER}/linux_64bit/session-manager-plugin.rpm" \
