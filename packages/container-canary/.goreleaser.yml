@@ -1,0 +1,32 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: container-canary
+
+variables:
+  Vendor: container-canary authors
+  VendorHomepage: https://github.com/nvidia/container-canary
+  License: Apache-2.0
+  Description: |-
+    A tool for testing and validating container requirements against versioned
+    manifests.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
