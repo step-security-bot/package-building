@@ -1,0 +1,32 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: benchstat
+
+variables:
+  Vendor: benchstat authors
+  VendorHomepage: https://pkg.go.dev/golang.org/x/perf
+  License: BSD-3-Clause
+  Description: |-
+    Package for analyzing Go benchmark results, such as the output of testing
+    package benchmarks.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
