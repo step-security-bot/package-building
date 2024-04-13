@@ -1,0 +1,32 @@
+---
+# https://goreleaser.com/customization/project/
+project_name: reviewdog
+
+variables:
+  Vendor: reviewdog authors
+  VendorHomepage: https://github.com/reviewdog/reviewdog
+  License: MIT
+  Description: |-
+    Automated code review tool integrated with any code analysis tools
+    regardless of programming language.
+
+# https://goreleaser.com/customization/includes/
+includes:
+  - from_file:
+      path: ../_dist.yml
+  - from_file:
+      path: ../_env.yml
+  - from_file:
+      path: ../_builds.yml
+  - from_file:
+      path: ../_nightly.yml
+  - from_file:
+      path: ../_nfpms.yml
+
+# https://goreleaser.com/customization/hooks/
+before:
+  hooks:
+    - cmd: |
+        bash ./download.sh
+      output: true
+      dir: .
