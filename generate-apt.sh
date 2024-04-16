@@ -2,10 +2,11 @@
 set -euo pipefail
 
 PATH_TO_READ="${1}"
+RELEASE="${2}"
 
 cat <<EOF
 Origin: Northwood Labs Repository
-Suite: stable
+Suite: ${RELEASE}
 Version: 1.0
 Codename: stable
 Date: $(date -Ru || true)

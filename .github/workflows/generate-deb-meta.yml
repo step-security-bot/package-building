@@ -74,5 +74,5 @@ jobs:
                 cat "dists/${REL}/main/binary-${CPU}/Packages" | gzip -9 > "dists/${REL}/main/binary-${CPU}/Packages.gz"
             done
 
-            bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt > /s3/apt/dists/${REL}/Release
+            bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt "${REL}" > /s3/apt/dists/${REL}/Release
           done
