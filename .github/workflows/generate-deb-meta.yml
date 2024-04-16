@@ -64,12 +64,15 @@ jobs:
               ;
 
           ARCH=("amd64" "arm64")
+          OS_VERS=("focal" "jammy")
 
-          for CPU in ${ARCH[@]}; do
-            cd "/s3/apt" && \
-              mkdir -p "dists/stable/main/binary-${CPU}" && \
-              dpkg-scanpackages --arch "${CPU}" pool/ > "dists/stable/main/binary-${CPU}/Packages" && \
-              cat "dists/stable/main/binary-${CPU}/Packages" | gzip -9 > "dists/stable/main/binary-${CPU}/Packages.gz"
+          for REL in ${OS_VERS[@]}; do
+            for CPU in ${ARCH[@]}; do
+              cd "/s3/apt" && \
+                mkdir -p "dists/${REL}/main/binary-${CPU}" && \
+                dpkg-scanpackages --arch "${CPU}" pool/ > "dists/${REL}/main/binary-${CPU}/Packages" && \
+                cat "dists/${REL}/main/binary-${CPU}/Packages" | gzip -9 > "dists/${REL}/main/binary-${CPU}/Packages.gz"
+            done
+
+            bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt > /s3/apt/dists/${REL}/Release
           done
-
-          bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt > /s3/apt/dists/stable/Release
