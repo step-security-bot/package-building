@@ -95,8 +95,8 @@ jobs:
                 --yes \
                 --verbose \
                 --local-user "${GPG_FINGERPRINT}" \
-                --output dists/jammy/Release.gpg \
-                --detach-sign dists/jammy/Release \
+                --output "dists/${REL}/Release.gpg" \
+                --detach-sign "dists/${REL}/Release" \
                 ;
 
             # Generate InRelease
@@ -108,7 +108,7 @@ jobs:
                 --yes \
                 --verbose \
                 --local-user "${GPG_FINGERPRINT}" \
-                --output dists/jammy/InRelease \
-                --detach-sign dists/jammy/Release \
+                --output "dists/${REL}/InRelease" \
+                --detach-sign "dists/${REL}/Release" \
                 ;
           done
