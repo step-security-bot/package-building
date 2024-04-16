@@ -63,13 +63,13 @@ jobs:
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
           if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}_*_arm64.deb") ]]; then
-            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_arm64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+            aws s3 cp ${{ inputs.package-name }}_*_arm64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
           fi
           if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}_*_amd64.deb") ]]; then
-            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_amd64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+            aws s3 cp ${{ inputs.package-name }}_*_amd64.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
           fi
           if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}_*_all.deb") ]]; then
-            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}_*_all.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
+            aws s3 cp ${{ inputs.package-name }}_*_all.deb s3://${PACKAGE_BUCKET}/apt/pool/main/
           fi
 
           ARCH=("x86_64" "aarch64")
@@ -79,14 +79,14 @@ jobs:
           for AL in "${AMZN[@]}"; do
             for CPU in "${ARCH[@]}"; do
               if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}-*.${CPU}.rpm") ]]; then
-                aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}-*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/
+                aws s3 cp ${{ inputs.package-name }}-*.${CPU}.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/${CPU}/
               fi
             done
           done
 
           # rpm noarch
           if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}-*.noarch.rpm") ]]; then
-            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}-*.noarch.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/noarch/
+            aws s3 cp ${{ inputs.package-name }}-*.noarch.rpm s3://${PACKAGE_BUCKET}/rpm/amazonlinux/${AL}/noarch/
           fi
 
           # apk
@@ -94,12 +94,12 @@ jobs:
           for ALP in "${ALPINE[@]}"; do
             for CPU in "${ARCH[@]}"; do
               if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}*_${CPU}.apk") ]]; then
-                aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/
+                aws s3 cp ${{ inputs.package-name }}*_${CPU}.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/${CPU}/
               fi
             done
           done
 
           # apk noarch
           if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}*_all.apk") ]]; then
-            aws s3 cp --sse=aws:kms --sse-kms-key-id="${AWSSSEKMSID}" ${{ inputs.package-name }}*_all.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/all/
+            aws s3 cp ${{ inputs.package-name }}*_all.apk s3://${PACKAGE_BUCKET}/apk/v${ALP}/main/all/
           fi

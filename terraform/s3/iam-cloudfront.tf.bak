@@ -1,0 +1,56 @@
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
+data "aws_iam_policy_document" "cloudfront_access" {
+  #   statement {
+  #     sid    = "AllowCloudFrontServicePrincipal"
+  #     effect = "Allow"
+
+  #     actions = [
+  #       "s3:GetObject",
+  #     ]
+
+  #     resources = [
+  #       "${local.bucket_arn}/*",
+  #     ]
+
+  #     principals {
+  #       identifiers = ["cloudfront.amazonaws.com"]
+  #       type        = "Service"
+  #     }
+
+  #     condition {
+  #       test     = "StringEquals"
+  #       variable = "AWS:SourceArn"
+
+  #       values = [
+  #         "arn:aws:cloudfront::381491855445:distribution/EUAG8TM04TZOV",
+  #       ]
+  #     }
+  #   }
+
+  # statement {
+  #   sid    = "AllowCloudFrontServiceKMS"
+  #   effect = "Allow"
+
+  #   actions = [
+  #     "kms:Decrypt",
+  #   ]
+
+  #   resources = [
+  #     data.aws_ssm_parameter.kms_arn.value,
+  #   ]
+
+  #   principals {
+  #     identifiers = ["cloudfront.amazonaws.com"]
+  #     type        = "Service"
+  #   }
+
+  #   condition {
+  #     test     = "StringEquals"
+  #     variable = "AWS:SourceArn"
+
+  #     values = [
+  #       "arn:aws:cloudfront::381491855445:distribution/EUAG8TM04TZOV",
+  #     ]
+  #   }
+  # }
+}

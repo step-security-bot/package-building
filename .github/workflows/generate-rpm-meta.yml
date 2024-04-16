@@ -46,7 +46,6 @@ jobs:
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
           AWS_REGION: ${{ vars.AWS_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWSSSEKMSID: "${{ secrets.AWSSSEKMSID }}"
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
           echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > ${HOME}/.passwd-s3fs
@@ -57,7 +56,6 @@ jobs:
               -o passwd_file=${HOME}/.passwd-s3fs \
               -o use_cache=/tmp \
               -o endpoint=us-east-2 \
-              -o use_sse=kmsid:${AWSSSEKMSID} \
               ;
 
           AMZN=("2" "2023")
