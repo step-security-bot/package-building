@@ -18,15 +18,15 @@ EOF
 echo "MD5Sum:"
 # shellcheck disable=2016
 find "${PATH_TO_READ}" -type f -name "Packages*" -print0 | xargs -0 -I% bash -c '
-    echo " $(md5sum "%" | cut --delimiter=" " --fields=1) $(wc --bytes "%" | sed -r "s,dists/([^/]+)/,,")"
+    echo " $(md5sum "%" | cut --delimiter=" " --fields=1) $(wc --bytes "%" | sed -r "s,/s3/apt/dists/([^/]+)/,,")"
 '
 echo "SHA1:"
 # shellcheck disable=2016
 find "${PATH_TO_READ}" -type f -name "Packages*" -print0 | xargs -0 -I% bash -c '
-    echo " $(sha1sum "%" | cut --delimiter=" " --fields=1) $(wc --bytes "%" | sed -r "s,dists/([^/]+)/,,")"
+    echo " $(sha1sum "%" | cut --delimiter=" " --fields=1) $(wc --bytes "%" | sed -r "s,/s3/apt/dists/([^/]+)/,,")"
 '
 echo "SHA256:"
 # shellcheck disable=2016
 find "${PATH_TO_READ}" -type f -name "Packages*" -print0 | xargs -0 -I% bash -c '
-    echo " $(sha256sum "%" | cut --delimiter=" " --fields=1) $(wc --bytes "%" | sed -r "s,dists/([^/]+)/,,")"
+    echo " $(sha256sum "%" | cut --delimiter=" " --fields=1) $(wc --bytes "%" | sed -r "s,/s3/apt/dists/([^/]+)/,,")"
 '

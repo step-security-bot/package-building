@@ -45,12 +45,21 @@ jobs:
         with:
           ref: ${{ github.base_ref }}
 
+      - name: Import GPG Signing Key
+        uses: crazy-max/ghaction-import-gpg@01dd5d3ca463c7f10f7f4f7b4f177225ac661ee4 # v6.1.0
+        id: import_gpg
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY_B64 }}
+          passphrase: ${{ secrets.GPG_PWD }}
+
       - name: Mount s3fs and generate metadata
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
           AWS_REGION: ${{ vars.AWS_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          GPG_PWD: ${{ secrets.GPG_PWD }}
           PACKAGE_BUCKET: ${{ vars.PACKAGE_BUCKET }}
         run: |
           echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > ${HOME}/.passwd-s3fs
@@ -74,5 +83,32 @@ jobs:
                 cat "dists/${REL}/main/binary-${CPU}/Packages" | gzip -9 > "dists/${REL}/main/binary-${CPU}/Packages.gz"
             done
 
+            # Generate Release
             bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt "${REL}" > /s3/apt/dists/${REL}/Release
+
+            # Generate Release.gpg
+            cd "/s3/apt" && \
+              gpg --pinentry-mode loopback \
+                --passphrase "${GPG_PWD}" \
+                --sign \
+                --armor \
+                --yes \
+                --verbose \
+                --local-user "${GPG_FINGERPRINT}" \
+                --output dists/jammy/Release.gpg \
+                --detach-sign dists/jammy/Release \
+                ;
+
+            # Generate InRelease
+            cd "/s3/apt" && \
+              gpg --pinentry-mode loopback \
+                --passphrase "${GPG_PWD}" \
+                --clearsign \
+                --armor \
+                --yes \
+                --verbose \
+                --local-user "${GPG_FINGERPRINT}" \
+                --output dists/jammy/InRelease \
+                --detach-sign dists/jammy/Release \
+                ;
           done
