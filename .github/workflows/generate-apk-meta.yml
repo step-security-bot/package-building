@@ -71,10 +71,8 @@ jobs:
 
           for ALP in "${ALPINE[@]}"; do
             for CPU in "${ARCH[@]}"; do
-              if [[ -f $(find . -maxdepth 1 -type f -name "${{ inputs.package-name }}*_${CPU}.apk") ]]; then
-                cd "/s3/apk/v${ALP}/main/${CPU}/" && \
-                  apk index --verbose --update-cache --output APKINDEX.tar.gz *.apk
-                abuild-sign --private "${{ github.repository }}/signing.pem" "/s3/apk/v${ALP}/main/${CPU}/APKINDEX.tar.gz"
-              fi
+              cd "/s3/apk/v${ALP}/main/${CPU}/" && \
+                apk index --verbose --update-cache --output APKINDEX.tar.gz *.apk
+              abuild-sign --private "${{ github.repository }}/signing.pem" "/s3/apk/v${ALP}/main/${CPU}/APKINDEX.tar.gz"
             done
           done
