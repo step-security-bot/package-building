@@ -64,6 +64,11 @@ jobs:
               -o endpoint=us-east-2 \
               ;
 
+          # Add the signing public key
+          wget -q \
+              https://nwlabs-381491855445-package-builder.s3.amazonaws.com/signing.key.pub \
+              -O /etc/apk/keys/northwood-labs.pub
+
           echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
 
           ALPINE=("3.17" "3.18" "3.19")
