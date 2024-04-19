@@ -48,23 +48,23 @@ nfpms:
     release: 1
     bindir: /usr/local/bin
     contents:
-      - src: /usr/local/bin/tenv_{{.GOARCH}}
+      - src: /usr/local/bin/tenv_{{.Arch}}
         dst: /usr/local/bin/tenv
         file_info:
           mode: 0755
-      - src: /usr/local/bin/terraform_{{.GOARCH}}
+      - src: /usr/local/bin/terraform_{{.Arch}}
         dst: /usr/local/bin/terraform
         file_info:
           mode: 0755
-      - src: /usr/local/bin/terragrunt_{{.GOARCH}}
+      - src: /usr/local/bin/terragrunt_{{.Arch}}
         dst: /usr/local/bin/terragrunt
         file_info:
           mode: 0755
-      - src: /usr/local/bin/tf_{{.GOARCH}}
+      - src: /usr/local/bin/tf_{{.Arch}}
         dst: /usr/local/bin/tf
         file_info:
           mode: 0755
-      - src: /usr/local/bin/tofu_{{.GOARCH}}
+      - src: /usr/local/bin/tofu_{{.Arch}}
         dst: /usr/local/bin/tofu
         file_info:
           mode: 0755
