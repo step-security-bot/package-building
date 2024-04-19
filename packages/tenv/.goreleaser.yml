@@ -48,10 +48,10 @@ nfpms:
     release: 1
     bindir: /usr/local/bin
     contents:
-      - src: /usr/local/bin/tenv_{{.Arch}}
-        dst: /usr/local/bin/tenv
-        file_info:
-          mode: 0755
+      # - src: /usr/local/bin/tenv_{{.Arch}}
+      #   dst: /usr/local/bin/tenv
+      #   file_info:
+      #     mode: 0755
       - src: /usr/local/bin/terraform_{{.Arch}}
         dst: /usr/local/bin/terraform
         file_info:
