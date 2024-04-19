@@ -19,8 +19,6 @@ includes:
       path: ../_builds.yml
   - from_file:
       path: ../_nightly.yml
-  - from_file:
-      path: ../_nfpms.yml
 
 # https://goreleaser.com/customization/hooks/
 before:
@@ -29,3 +27,58 @@ before:
         bash ./download.sh
       output: true
       dir: .
+
+# https://goreleaser.com/customization/nfpm/
+nfpms:
+  - id: package
+    package_name: "{{ .ProjectName }}"
+    file_name_template: "{{ .ConventionalFileName }}"
+    builds:
+      - prebuilt
+    vendor: "{{ .Var.Vendor }}"
+    homepage: "{{ .Var.VendorHomepage }}"
+    maintainer: Northwood Labs <packages@northwood-labs.com>
+    description: "{{ .Var.Description }}"
+    license: "{{ .Var.License }}"
+    formats:
+      - apk
+      - deb
+      - rpm
+    umask: 0o002
+    release: 1
+    bindir: /usr/local/bin
+    contents:
+      - src: /usr/local/bin/tenv_{{.GOARCH}}
+        dst: /usr/local/bin/tenv
+        file_info:
+          mode: 0755
+      - src: /usr/local/bin/terraform_{{.GOARCH}}
+        dst: /usr/local/bin/terraform
+        file_info:
+          mode: 0755
+      - src: /usr/local/bin/terragrunt_{{.GOARCH}}
+        dst: /usr/local/bin/terragrunt
+        file_info:
+          mode: 0755
+      - src: /usr/local/bin/tf_{{.GOARCH}}
+        dst: /usr/local/bin/tf
+        file_info:
+          mode: 0755
+      - src: /usr/local/bin/tofu_{{.GOARCH}}
+        dst: /usr/local/bin/tofu
+        file_info:
+          mode: 0755
+    rpm:
+      summary: "{{ .Var.Description }}"
+      packager: Northwood Labs <packages@northwood-labs.com>
+      compression: lzma
+      signature:
+        key_file: 3C7658F0.asc
+    deb:
+      signature:
+        key_file: 3C7658F0.asc
+        type: archive
+    apk:
+      signature:
+        key_file: signing.pem
+        key_name: "signing-keys@northwood-labs.com"
