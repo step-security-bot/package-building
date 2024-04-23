@@ -17,8 +17,8 @@ provides:
 depends:
   - tenv
 umask: 0o002
-scripts:
-  postinstall: postinstall.sh
+# scripts:
+#   postinstall: postinstall.sh
 rpm:
   summary: "{{ .Var.Description }}"
   packager: Northwood Labs <packages@northwood-labs.com>
