@@ -1,4 +1,4 @@
-name: terraform
+name: opentofu
 arch: all
 platform: linux
 version: "99.9.9"
@@ -6,14 +6,14 @@ release: 1
 section: default
 maintainer: Northwood Labs <packages@northwood-labs.com>
 description: |-
-  Terraform is an infrastructure as code tool that lets you build, change, and
+  OpenTofu is an infrastructure as code tool that lets you build, change, and
   version infrastructure safely and efficiently.
-vendor: terraform authors
-homepage: https://developer.hashicorp.com/terraform
-license: BUSL-1.1
+vendor: opentofu authors
+homepage: https://opentofu.org
+license: MPL-2.0
 disable_globbing: false
 provides:
-  - terraform
+  - tofu
 depends:
   - tenv
 umask: 0o002
