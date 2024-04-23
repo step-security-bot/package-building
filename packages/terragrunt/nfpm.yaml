@@ -1,0 +1,36 @@
+name: terragrunt
+arch: all
+platform: linux
+version: "99.9.9"
+release: 1
+section: default
+maintainer: Northwood Labs <packages@northwood-labs.com>
+description: |-
+  Terragrunt is a thin wrapper that provides extra tools for keeping your
+  configurations DRY, working with multiple Terraform modules, and managing
+  remote state.
+vendor: terragrunt authors
+homepage: https://terragrunt.gruntwork.io
+license: MIT
+disable_globbing: false
+provides:
+  - terragrunt
+depends:
+  - tenv
+umask: 0o002
+scripts:
+  postinstall: postinstall.sh
+rpm:
+  summary: "{{ .Var.Description }}"
+  packager: Northwood Labs <packages@northwood-labs.com>
+  compression: lzma
+  signature:
+    key_file: 3C7658F0.asc
+deb:
+  signature:
+    key_file: 3C7658F0.asc
+    type: archive
+apk:
+  signature:
+    key_file: signing.pem
+    key_name: "signing-keys@northwood-labs.com"
