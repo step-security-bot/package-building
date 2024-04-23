@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-terraform
+/usr/local/bin/terraform
