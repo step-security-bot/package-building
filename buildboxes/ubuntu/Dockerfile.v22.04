@@ -61,6 +61,7 @@ RUN apt-get -y update && \
         libncurses5-dev \
         libreadline-dev \
         locales \
+        lsb-release \
         pkg-config \
         python3 \
         python3-dev \
