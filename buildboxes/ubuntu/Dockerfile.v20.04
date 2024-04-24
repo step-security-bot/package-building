@@ -17,6 +17,7 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM."
 # Identify ourselves
 ENV OS_DIST ubuntu
 ENV OS_DIST_VER 20.04
+ENV OS_DIST_NAME focal
 ENV OS_DIST_PKG deb
 
 # Environment variables

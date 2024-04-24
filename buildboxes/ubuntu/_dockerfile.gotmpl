@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM --platform=$TARGETPLATFORM ubuntu:{{ .UbuntuVersion }}
+FROM --platform=$TARGETPLATFORM ubuntu:{{ .UbuntuVersion.Version }}
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 {{ .DoNotEdit }}
@@ -11,7 +11,8 @@ RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM."
 
 # Identify ourselves
 ENV OS_DIST ubuntu
-ENV OS_DIST_VER {{ .UbuntuVersion }}
+ENV OS_DIST_VER {{ .UbuntuVersion.Version }}
+ENV OS_DIST_NAME {{ .UbuntuVersion.Codename }}
 ENV OS_DIST_PKG deb
 
 # Environment variables
@@ -89,7 +90,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
-LABEL org.opencontainers.image.title="Package Builder: Ubuntu {{ .UbuntuVersion }}"
+LABEL org.opencontainers.image.title="Package Builder: Ubuntu {{ .UbuntuVersion.Version }}"
 LABEL org.opencontainers.image.description="Container image to help facilitate building packages for Ubuntu."
 LABEL org.opencontainers.image.url="https://github.com/northwood-labs/package-building"
 LABEL org.opencontainers.image.documentation="https://github.com/northwood-labs/package-building/wiki"

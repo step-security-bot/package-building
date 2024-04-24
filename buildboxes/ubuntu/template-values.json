@@ -1,6 +1,12 @@
 {
   "UbuntuVersions": [
-    "20.04",
-    "22.04"
+    {
+      "Version": "20.04",
+      "Codename": "focal"
+    },
+    {
+      "Version": "22.04",
+      "Codename": "jammy"
+    }
   ]
 }
