@@ -55,13 +55,17 @@ jobs:
 
       - name: Compile the software from source
         working-directory: packages/${{ inputs.package-name }}
+        env:
+          PKG_VER: "${{ inputs.package-version }}"
         run: |
-          # Run the compile script for Ubuntu 22.04
+          # Run the compile script for Ubuntu
           # Variables are defined by the Docker container this is running in.
           bash "./compile-${OS_DIST}-${OS_DIST_NAME}.sh"
 
       - name: Package the compiled software
         working-directory: packages/${{ inputs.package-name }}
+        env:
+          PKG_VER: "${{ inputs.package-version }}"
         run: |
           # Decode the contents into files.
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
