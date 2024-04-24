@@ -6,6 +6,7 @@ apt-get -y update
 apt-get -y install --no-install-recommends \
     apt-utils \
     ca-certificates \
+    dialog \
     gnupg2 \
     lsb-release \
     software-properties-common \

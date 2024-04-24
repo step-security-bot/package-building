@@ -1,0 +1,78 @@
+---
+# This workflow uses actions that are not certified by GitHub. They are provided
+# by a third-party and are governed by separate terms of service, privacy
+# policy, and support documentation.
+
+name: "🎯 Step: Build and cache"
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+      package-version:
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-build-and-cache
+  cancel-in-progress: true
+
+# Variables available to all jobs defined in this file
+env:
+  DOCKER_BUILDKIT: 1
+  REGISTRY: ${{ vars.REGISTRY }}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  compile_ubuntu:
+    runs-on: ubuntu-latest
+    name: "📦 Compile for Ubuntu ${{ matrix.Release }} (${{ matrix.Arch }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        Release:
+          - "20.04"
+          - "22.04"
+        Arch:
+          - amd64
+          - arm64
+
+    container:
+      image: "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.Release }}:latest"
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged --platform "linux/${{ matrix.Arch }}"
+
+    steps:
+      - name: Git clone
+        uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f # v4.1.3
+        with:
+          ref: ${{ github.base_ref }}
+
+      - name: Compile the software from source
+        working-directory: packages/${{ inputs.package-name }}
+        run: |
+          # Run the compile script for Ubuntu 22.04
+          # Variables are defined by the Docker container this is running in.
+          bash "./compile-${OS_DIST}-${OS_DIST_VER}.sh"
+
+      - name: Package the compiled software
+        working-directory: packages/${{ inputs.package-name }}
+        run: |
+          # Decode the contents into files.
+          echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
+          echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
+
+          mkdir -p ./dist
+          nfpm package --config nfpm-${OS_DIST}-${OS_DIST_VER}.yaml --packager deb --target ./dist
+
+      - name: Cache the packages
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        id: cache-packages
+        with:
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-${OS_DIST}-${OS_DIST_VER}-${{ matrix.Arch }}"
+          path: packages/${{ inputs.package-name }}/dist
