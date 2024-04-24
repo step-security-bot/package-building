@@ -29,7 +29,7 @@ permissions: read-all
 jobs:
   compile_ubuntu:
     runs-on: ubuntu-latest
-    name: "📦 Compile for Ubuntu ${{ matrix.Release }} (${{ matrix.Arch }})"
+    name: "📦 Ubuntu ${{ matrix.Release }} (${{ matrix.Arch }})"
     strategy:
       fail-fast: false
       matrix:
@@ -65,7 +65,6 @@ jobs:
         run: |
           # Decode the contents into files.
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
-          echo -n "${RSA_KEY_B64}" | base64 --decode > signing.pem
 
           mkdir -p ./dist
           nfpm package --config nfpm-${OS_DIST}-${OS_DIST_VER}.yaml --packager deb --target ./dist
