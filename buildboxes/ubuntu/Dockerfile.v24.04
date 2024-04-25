@@ -42,7 +42,11 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* \
     ;
 
-RUN add-apt-repository -y ppa:longsleep/golang-backports
+# Ubuntu Noble already has Go 1.22.
+RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends \
+        golang \
+    ;
 
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \

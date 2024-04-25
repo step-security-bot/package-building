@@ -42,7 +42,12 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* \
     ;
 
+# Ubuntu Focal and Jammy need to upgrade to Go 1.22.
 RUN add-apt-repository -y ppa:longsleep/golang-backports
+RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends \
+        golang-go \
+    ;
 
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \

@@ -37,7 +37,22 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* \
     ;
 
+{{ if eq .UbuntuVersion.Codename "noble" -}}
+# Ubuntu Noble already has Go 1.22.
+RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends \
+        golang \
+    ;
+
+{{ else -}}
+# Ubuntu Focal and Jammy need to upgrade to Go 1.22.
 RUN add-apt-repository -y ppa:longsleep/golang-backports
+RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends \
+        golang-go \
+    ;
+
+{{ end -}}
 
 RUN apt-get -y update && \
     apt-get -y install --no-install-recommends \
