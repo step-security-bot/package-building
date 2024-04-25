@@ -70,6 +70,8 @@ jobs:
           # Decode the contents into files.
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
 
+          ls -lahF
+
           mkdir -p ./dist
           nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
 
