@@ -61,7 +61,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "package_version=$(download-asset latest-tag -r 'python/cpython' -s)" >> $GITHUB_OUTPUT
+          echo "package_version=$(download-asset latest-tag -r 'python/cpython' -s -c '~> 3.12.0')" >> $GITHUB_OUTPUT
 
       - name: Check to see if we've already built this version
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
