@@ -28,8 +28,8 @@ permissions: read-all
 
 jobs:
   compile_ubuntu:
-    runs-on: ubuntu-latest
-    name: "📦 Ubuntu ${{ matrix.release.version }} (${{ matrix.arch }})"
+    runs-on: ${{ matrix.arch.runner }}
+    name: "📦 Ubuntu ${{ matrix.release.version }} (${{ matrix.arch.id }})"
     strategy:
       fail-fast: false
       matrix:
@@ -39,19 +39,16 @@ jobs:
           - version: "22.04"
             name: jammy
         arch:
-          - amd64
-          - arm64
+          - id: amd64
+            runner: ubuntu-latest
+          - id: arm64
+            runner: ubicloud-standard-2-arm
 
     steps:
       - name: Git clone
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           ref: ${{ github.base_ref }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
-        with:
-          platforms: ${{ matrix.arch }}
 
       - name: Compile the software from source
         env:
@@ -66,7 +63,7 @@ jobs:
             --env PKG_VER \
             --volume "$PWD:/${{ github.workspace }}" \
             --workdir ${{ github.workspace }} \
-            --platform linux/${{ matrix.arch }} \
+            --platform linux/${{ matrix.arch.id }} \
             "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.release.version }}:latest" \
             bash packages/${{ inputs.package-name }}/compile-ubuntu-${{ matrix.release.name }}.sh "${{ inputs.package-version }}" && \
             echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc && \
@@ -76,5 +73,5 @@ jobs:
         uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache-packages
         with:
-          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.version }}-${{ matrix.arch }}"
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.version }}-${{ matrix.arch.id }}"
           path: packages/${{ inputs.package-name }}/dist
