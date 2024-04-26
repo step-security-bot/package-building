@@ -65,6 +65,8 @@ jobs:
       - name: Package the compiled software
         working-directory: packages/${{ inputs.package-name }}
         env:
+          GPG_KEY_B64: ${{ secrets.GPG_KEY_B64 }}
+          NFPM_PASSPHRASE: "${{ secrets.GPG_PWD }}"
           PKG_VER: "${{ inputs.package-version }}"
         run: |
           # Decode the contents into files.
