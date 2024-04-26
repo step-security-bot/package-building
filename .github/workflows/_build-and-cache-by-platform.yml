@@ -56,6 +56,8 @@ jobs:
       - name: Compile the software from source
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_KEY_B64: ${{ secrets.GPG_KEY_B64 }}
+          NFPM_PASSPHRASE: "${{ secrets.GPG_PWD }}"
           PKG_VER: "${{ inputs.package-version }}"
         run: |
           docker run \
@@ -66,20 +68,9 @@ jobs:
             --workdir ${{ github.workspace }} \
             --platform linux/${{ matrix.arch }} \
             "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.release.version }}:latest" \
-            bash packages/${{ inputs.package-name }}/compile-ubuntu-${{ matrix.release.name }}.sh "${{ inputs.package-version }}"
-
-      - name: Package the compiled software
-        working-directory: packages/${{ inputs.package-name }}
-        env:
-          GPG_KEY_B64: ${{ secrets.GPG_KEY_B64 }}
-          NFPM_PASSPHRASE: "${{ secrets.GPG_PWD }}"
-          PKG_VER: "${{ inputs.package-version }}"
-        run: |
-          # Decode the contents into files.
-          echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
-
-          mkdir -p ./dist
-          nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
+            bash packages/${{ inputs.package-name }}/compile-ubuntu-${{ matrix.release.name }}.sh "${{ inputs.package-version }}" && \
+            echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc && \
+            mkdir -p ./dist && nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
 
       - name: Cache the packages
         uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
