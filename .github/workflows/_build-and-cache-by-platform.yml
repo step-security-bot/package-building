@@ -61,6 +61,7 @@ jobs:
           docker run \
             --rm \
             --env GITHUB_TOKEN \
+            --env PKG_VER \
             --volume "$PWD:/${{ github.workspace }}" \
             --workdir ${{ github.workspace }} \
             --platform linux/${{ matrix.arch }} \
