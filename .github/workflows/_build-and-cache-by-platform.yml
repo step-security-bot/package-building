@@ -42,7 +42,14 @@ jobs:
           - id: amd64
             runner: ubuntu-latest
           - id: arm64
-            runner: ubicloud-standard-2-arm
+            runner: ubicloud-standard-4-arm
+
+    container:
+      image: "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.release.version }}:latest"
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --privileged
 
     steps:
       - name: Git clone
@@ -51,27 +58,26 @@ jobs:
           ref: ${{ github.base_ref }}
 
       - name: Compile the software from source
+        working-directory: packages/${{ inputs.package-name }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PKG_VER: "${{ inputs.package-version }}"
+        run: |
+          bash "./compile-${OS_DIST}-${OS_DIST_NAME}.sh"
+
+      - name: Package the compiled software
+        working-directory: packages/${{ inputs.package-name }}
+        env:
           GPG_KEY_B64: ${{ secrets.GPG_KEY_B64 }}
           NFPM_PASSPHRASE: "${{ secrets.GPG_PWD }}"
           PKG_VER: "${{ inputs.package-version }}"
         run: |
-          docker run \
-            --rm \
-            --env GITHUB_TOKEN \
-            --env PKG_VER \
-            --volume "$PWD:/${{ github.workspace }}" \
-            --workdir ${{ github.workspace }} \
-            --platform linux/${{ matrix.arch.id }} \
-            "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.release.version }}:latest" \
-            bash packages/${{ inputs.package-name }}/compile-ubuntu-${{ matrix.release.name }}.sh "${{ inputs.package-version }}" && \
-            echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc && \
-            mkdir -p ./dist && nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
+          echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
+          mkdir -p ./dist
+          nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
 
       - name: Cache the packages
         uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache-packages
         with:
-          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.version }}-${{ matrix.arch.id }}"
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.name }}-${{ matrix.arch.id }}"
           path: packages/${{ inputs.package-name }}/dist
