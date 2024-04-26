@@ -1,0 +1,31 @@
+name: python3.12
+arch: "{{ .Arch }}"
+platform: linux
+version: ${PKG_VER}
+release: 1
+section: default
+maintainer: Northwood Labs <packages@northwood-labs.com>
+description: |-
+  Python is a clear and powerful object-oriented programming language,
+  comparable to Perl, Ruby, Scheme, or Java.
+vendor: python authors
+homepage: https://www.python.org
+license: PSF-2.0
+disable_globbing: false
+provides:
+  - 2to3-3.12
+  - idle3.12
+  - pip3.12
+  - pydoc3.12
+  - python3.12
+  - python3.12-config
+contents:
+  - src: /tmp/install/usr
+    dst: /usr
+umask: 0o002
+# scripts:
+#   postinstall: postinstall.sh
+deb:
+  signature:
+    key_file: 3C7658F0.asc
+    type: archive

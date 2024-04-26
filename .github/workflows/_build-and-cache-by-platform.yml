@@ -29,23 +29,18 @@ permissions: read-all
 jobs:
   compile_ubuntu:
     runs-on: ubuntu-latest
-    name: "📦 Ubuntu ${{ matrix.Release }} (${{ matrix.Arch }})"
+    name: "📦 Ubuntu ${{ matrix.release.version }} (${{ matrix.arch }})"
     strategy:
       fail-fast: false
       matrix:
-        Release:
-          - "20.04"
-          - "22.04"
-        Arch:
+        release:
+          - version: "20.04"
+            name: focal
+          - version: "22.04"
+            name: jammy
+        arch:
           - amd64
           - arm64
-
-    container:
-      image: "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.Release }}:latest"
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-      options: --privileged --platform "linux/${{ matrix.Arch }}"
 
     steps:
       - name: Git clone
@@ -53,14 +48,24 @@ jobs:
         with:
           ref: ${{ github.base_ref }}
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
+        with:
+          platforms: ${{ matrix.arch }}
+
       - name: Compile the software from source
-        working-directory: packages/${{ inputs.package-name }}
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PKG_VER: "${{ inputs.package-version }}"
         run: |
-          # Run the compile script for Ubuntu
-          # Variables are defined by the Docker container this is running in.
-          bash "./compile-${OS_DIST}-${OS_DIST_NAME}.sh"
+          docker run \
+            --rm \
+            --env GITHUB_TOKEN \
+            --volume "$PWD:/${{ github.workspace }}" \
+            --workdir ${{ github.workspace }} \
+            --platform linux/${{ matrix.arch }} \
+            "ghcr.io/northwood-labs/package-builder/ubuntu-v${{ matrix.release.version }}:latest" \
+            bash packages/${{ inputs.package-name }}/compile-ubuntu-${{ matrix.release.name }}.sh "${{ inputs.package-version }}"
 
       - name: Package the compiled software
         working-directory: packages/${{ inputs.package-name }}
@@ -72,8 +77,6 @@ jobs:
           # Decode the contents into files.
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
 
-          ls -lahF
-
           mkdir -p ./dist
           nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
 
@@ -81,5 +84,5 @@ jobs:
         uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache-packages
         with:
-          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-${OS_DIST}-${OS_DIST_NAME}-${{ matrix.Arch }}"
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.version }}-${{ matrix.arch }}"
           path: packages/${{ inputs.package-name }}/dist
