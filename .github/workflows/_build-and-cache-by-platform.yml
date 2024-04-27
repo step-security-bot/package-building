@@ -82,3 +82,17 @@ jobs:
         with:
           key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.name }}-${{ matrix.arch.id }}"
           path: packages/${{ inputs.package-name }}/dist
+
+  add_marker:
+    needs:
+      - compile_ubuntu
+    runs-on: ubuntu-latest
+    name: "Add build marker if all builds succeed"
+
+    steps:
+      - name: Cache the packages
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        id: cache-packages
+        with:
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}"
+          path: /etc/os-release

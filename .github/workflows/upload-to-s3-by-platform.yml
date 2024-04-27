@@ -52,6 +52,13 @@ jobs:
       options: --privileged
 
     steps:
+      - name: Being paranoid
+        run: |
+          echo "package-name: ${{ inputs.package-name }}"
+          echo "package-version: ${{ inputs.package-version }}"
+          echo "release-name: ${{ matrix.release.name }}"
+          echo "cpu-arch: ${{ matrix.arch.id }}"
+
       - name: Restore the cached packages from the previous stage
         uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache
