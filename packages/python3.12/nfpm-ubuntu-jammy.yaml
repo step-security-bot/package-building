@@ -1,5 +1,5 @@
 name: python3.12
-arch: "{{ .Arch }}"
+arch: "${GOARCH}"
 platform: linux
 version: ${PKG_VER}
 release: 1

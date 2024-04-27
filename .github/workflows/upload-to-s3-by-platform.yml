@@ -60,7 +60,7 @@ jobs:
           path: packages/${{ inputs.package-name }}/dist
 
       - name: Perform upload to S3
-        working-directory: ./packages/${{ inputs.package-name }}/dist
+        working-directory: packages/${{ inputs.package-name }}/dist
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
