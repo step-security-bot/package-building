@@ -74,6 +74,7 @@ jobs:
           echo -n "${GPG_KEY_B64}" | base64 --decode > 3C7658F0.asc
           mkdir -p ./dist
           nfpm package --config nfpm-${OS_DIST}-${OS_DIST_NAME}.yaml --packager deb --target ./dist
+          ls -lahF ./dist
 
       - name: Cache the packages
         uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2

@@ -85,7 +85,7 @@ jobs:
     if: needs.lookup.outputs.cache_hit != 'true'
     needs: build
     name: Upload to S3
-    uses: northwood-labs/package-building/.github/workflows/upload-to-s3.yml@main
+    uses: northwood-labs/package-building/.github/workflows/upload-to-s3-by-platform.yml@main
     secrets: inherit
     with:
       package-name: "python3.12"

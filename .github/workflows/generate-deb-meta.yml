@@ -73,42 +73,45 @@ jobs:
               ;
 
           ARCH=("amd64" "arm64")
+          REPOS=("main" "focal" "jammy")
           OS_VERS=("focal" "jammy")
 
-          for REL in ${OS_VERS[@]}; do
-            for CPU in ${ARCH[@]}; do
+          for REPO in ${REPOS[@]}; do
+            for REL in ${OS_VERS[@]}; do
+              for CPU in ${ARCH[@]}; do
+                cd "/s3/apt" && \
+                  mkdir -p "dists/${REL}/${REPO}/binary-${CPU}" && \
+                  dpkg-scanpackages --arch "${CPU}" pool/ > "dists/${REL}/${REPO}/binary-${CPU}/Packages" && \
+                  cat "dists/${REL}/${REPO}/binary-${CPU}/Packages" | gzip -9 > "dists/${REL}/${REPO}/binary-${CPU}/Packages.gz"
+              done
+
+              # Generate Release
+              bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt "${REL}" > /s3/apt/dists/${REL}/Release
+
+              # Generate Release.gpg
               cd "/s3/apt" && \
-                mkdir -p "dists/${REL}/main/binary-${CPU}" && \
-                dpkg-scanpackages --arch "${CPU}" pool/ > "dists/${REL}/main/binary-${CPU}/Packages" && \
-                cat "dists/${REL}/main/binary-${CPU}/Packages" | gzip -9 > "dists/${REL}/main/binary-${CPU}/Packages.gz"
+                gpg --pinentry-mode loopback \
+                  --passphrase "${GPG_PWD}" \
+                  --sign \
+                  --armor \
+                  --yes \
+                  --verbose \
+                  --local-user "${GPG_FINGERPRINT}" \
+                  --output "dists/${REL}/Release.gpg" \
+                  --detach-sign "dists/${REL}/Release" \
+                  ;
+
+              # Generate InRelease
+              cd "/s3/apt" && \
+                gpg --pinentry-mode loopback \
+                  --passphrase "${GPG_PWD}" \
+                  --clearsign \
+                  --armor \
+                  --yes \
+                  --verbose \
+                  --local-user "${GPG_FINGERPRINT}" \
+                  --output "dists/${REL}/InRelease" \
+                  --detach-sign "dists/${REL}/Release" \
+                  ;
             done
-
-            # Generate Release
-            bash "${GITHUB_WORKSPACE}/generate-apt.sh" /s3/apt "${REL}" > /s3/apt/dists/${REL}/Release
-
-            # Generate Release.gpg
-            cd "/s3/apt" && \
-              gpg --pinentry-mode loopback \
-                --passphrase "${GPG_PWD}" \
-                --sign \
-                --armor \
-                --yes \
-                --verbose \
-                --local-user "${GPG_FINGERPRINT}" \
-                --output "dists/${REL}/Release.gpg" \
-                --detach-sign "dists/${REL}/Release" \
-                ;
-
-            # Generate InRelease
-            cd "/s3/apt" && \
-              gpg --pinentry-mode loopback \
-                --passphrase "${GPG_PWD}" \
-                --clearsign \
-                --armor \
-                --yes \
-                --verbose \
-                --local-user "${GPG_FINGERPRINT}" \
-                --output "dists/${REL}/InRelease" \
-                --detach-sign "dists/${REL}/Release" \
-                ;
           done
