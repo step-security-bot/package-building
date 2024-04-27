@@ -23,6 +23,8 @@ gpg --output /etc/apt/trusted.gpg.d/northwood-labs.asc \
 RELEASE="$(lsb_release -cs)"
 mkdir -p /etc/apt/sources.list.d
 cat <<EOF >/etc/apt/sources.list.d/northwood-labs.list
+# deb https://pkg.northwood-labs.com/apt ${RELEASE} main
+# deb https://pkg.northwood-labs.com/apt ${RELEASE} ${RELEASE}
 deb https://nwlabs-381491855445-package-builder.s3.amazonaws.com/apt ${RELEASE} main
 deb https://nwlabs-381491855445-package-builder.s3.amazonaws.com/apt ${RELEASE} ${RELEASE}
 EOF
