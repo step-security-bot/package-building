@@ -83,7 +83,9 @@ jobs:
 
   upload:
     if: needs.lookup.outputs.cache_hit != 'true'
-    needs: build
+    needs:
+      - build
+      - lookup
     name: Upload to S3
     uses: northwood-labs/package-building/.github/workflows/upload-to-s3-by-platform.yml@main
     secrets: inherit
