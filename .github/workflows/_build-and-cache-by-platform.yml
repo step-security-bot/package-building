@@ -52,12 +52,22 @@ jobs:
       options: --privileged
 
     steps:
+      - name: Check to see if we've already built this version
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        id: check
+        with:
+          key: "${{ inputs.package-name }}-${{ inputs.package-version }}-ubuntu-${{ matrix.release.name }}-${{ matrix.arch.id }}"
+          path: "packages/python3.12/dist"
+          lookup-only: true
+
       - name: Git clone
+        if: steps.check.outputs.cache-hit != 'true'
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           ref: ${{ github.base_ref }}
 
       - name: Compile the software from source
+        if: steps.check.outputs.cache-hit != 'true'
         working-directory: packages/${{ inputs.package-name }}
         env:
           PKG_VER: "${{ inputs.package-version }}"
@@ -65,6 +75,7 @@ jobs:
           bash "./compile-${OS_DIST}-${OS_DIST_NAME}.sh"
 
       - name: Package the compiled software
+        if: steps.check.outputs.cache-hit != 'true'
         working-directory: packages/${{ inputs.package-name }}
         env:
           GPG_KEY_B64: ${{ secrets.GPG_KEY_B64 }}
@@ -77,6 +88,7 @@ jobs:
           ls -lahF ./dist
 
       - name: Cache the packages
+        if: steps.check.outputs.cache-hit != 'true'
         uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         id: cache-packages
         with:
